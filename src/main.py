@@ -5,12 +5,12 @@ import logging
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
-
+from fastapi.responses import FileResponse
+from pydantic import BaseModel
 
 # *****************************************************************************
 #                  Some global constants and variables
 # *****************************************************************************
-
 
 NAME = 'Informative app of the global food crisis'
 VERSION = '1.1.0'
@@ -21,11 +21,9 @@ DATA_PATH: str = 'data/'
 URL_PREFIX: str = os.getenv("URL_PREFIX") or ""
 SERVER_ADDRESS: str = os.getenv("SERVER_ADDRESS") or ""
 
-
 # *****************************************************************************
 #                  FastAPI entry point declaration
 # *****************************************************************************
-
 
 rootapp = FastAPI()
 
@@ -52,40 +50,32 @@ rootapp.mount(URL_PREFIX, app)
 logger = logging.getLogger("uvicorn.error")
 logger.info('Starting app with URL_PREFIX=' + URL_PREFIX)
 
-
 # *****************************************************************************
 #                  Set the logging for the service
 # *****************************************************************************
 
-
 logger = logging.getLogger("uvicorn.error")
 logger.info('Starting app with URL_PREFIX=' + URL_PREFIX)
-
 
 # ******************************************************************************
 #             Classes declaration - for input and output models
 # ******************************************************************************
-
-
 class parameters(BaseModel):
-    #budget: Optional[int] = None
-
+    none: int
 
 # *****************************************************************************
 #                  Done once when micro-service is starting up
 # *****************************************************************************
 
-
-@rootapp.on_event("startup")
-def initialization():
+async def startup_event():
     #data = pd.read_csv("data/clean/merged/CPU.csv")  
-    return None
-    
+    return None   
+
+rootapp.add_event_handler("startup", startup_event)
 
 # ******************************************************************************
 #                  API Route definition
 # ******************************************************************************
-
 
 @app.get("/")
 def info():
@@ -111,11 +101,9 @@ async def assets(filename: str):
 
     return FileResponse(os.path.dirname(os.getcwd())+ "/showcase/assets/" + filename)
 
-
 # ******************************************************************************
 #                  API Functions
 # ******************************************************************************
- 
  
 def none():
     return None
