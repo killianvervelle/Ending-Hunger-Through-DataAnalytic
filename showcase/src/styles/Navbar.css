@@ -87,6 +87,7 @@
     height: 90vh;
     position: absolute;
     top: 80px;
+    right: -100%;
     left: -100%;
     opacity: 1;
     transition: all 0.5s ease;
@@ -97,13 +98,16 @@
     left: 0;
     opacity: 1;
     transition: all 0.5s ease;
+    width: 100%;
+    height: 400px;
     z-index: 1;
   }
 
   .nav-links {
     text-align: center;
-    padding: 2rem;
-    width: 100%;
+    padding: 1rem;
+    height: 50%;
+    width: 87%;
     display: table;
   }
 

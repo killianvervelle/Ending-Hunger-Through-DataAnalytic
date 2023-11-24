@@ -1,14 +1,17 @@
+// components/WorldMap.js
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import * as d3 from 'd3';
 
+// Styles
 import '../styles/WorldMap.css';
 
 function WorldMap() {
 
   const mapRef = useRef();
   const navigate = useNavigate();
+
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const [popupData, setPopupData] = useState({ country: "", value: 0 });
@@ -26,9 +29,6 @@ function WorldMap() {
   const handleClick = (event, d) => {
     const countryId = d.properties.adm0_a3_us;
     const countryInfo = mockData.find(country => country.id === countryId) || { id: countryId, value: 'Undefined' };
-
-    // Close the previous popup
-    setSelectedCountry(null);
 
     // Open the new popup
     setSelectedCountry(countryId);
@@ -48,21 +48,16 @@ function WorldMap() {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-
-  }, []);
+  });
 
   const drawMap = (geojson, data) => {
     const width = window.innerWidth;
     const height = 600;
 
-    const svgExists = d3.select(mapRef.current)
-                        .select('svg')
-                        .size() > 0;
+    const svgExists = d3.select(mapRef.current).select('svg').size() > 0;
 
     if (svgExists) {
-      d3.select(mapRef.current)
-        .select('svg')
-        .remove();
+      d3.select(mapRef.current).select('svg').remove();
     }
 
     const svg = d3.select(mapRef.current)
@@ -81,39 +76,34 @@ function WorldMap() {
     const countryDataMap = new Map(data.map(entry => [entry.id, entry.value]));
 
     svg.selectAll('path')
-      .data(geojson.features)
-      .enter()
-      .append('path')
-      .attr('d', path)
-      .style('stroke', 'white')
-      .style('stroke-width', 1)
-      .style('fill', d => getColor(countryDataMap.get(d.properties.adm0_a3_us)))
-      .on('mouseover', handleMouseOver)
-      .on('mouseout', handleMouseOut)
-      .on('click', handleClick);
+       .data(geojson.features)
+       .enter()
+       .append('path')
+       .attr('d', path)
+       .style('stroke', 'white')
+       .style('stroke-width', 1)
+       .style('fill', d => getColor(countryDataMap.get(d.properties.adm0_a3_us)))
+       .on('mouseover', handleMouseOver)
+       .on('mouseout', handleMouseOut)
+       .on('click', handleClick);
 
     function handleZoom(event) {
       const { transform } = event;
       const zoomLevel = transform.k;
 
-      svg.selectAll('path')
-        .style('stroke-width', 1 / zoomLevel);
-
-      svg.selectAll('path')
-        .attr('transform', transform);
+      svg.selectAll('path').style('stroke-width', 1 / zoomLevel).attr('transform', transform);
     }
 
     function handleMouseOver(event, d) {
       const countryName = d.properties.name;
-  
+
       // Get the current fill color
       const currentColor = d3.select(this).style('fill');
-      
-      // Lighten the color (you can adjust the factor as needed)
+
+      // Lighten the color
       const lighterColor = d3.rgb(currentColor).brighter(0.5).toString();
 
-      d3.select(this)
-        .style('fill', lighterColor);
+      d3.select(this).style('fill', lighterColor);
 
       const [x, y] = d3.pointer(event);
 
@@ -129,18 +119,16 @@ function WorldMap() {
     }
 
     function handleMouseOut(event, d) {
-      d3.select(this)
-        .style('fill', d => getColor(countryDataMap.get(d.properties.adm0_a3_us)));
-    
+      d3.select(this).style('fill', d => getColor(countryDataMap.get(d.properties.adm0_a3_us)));
+
       svg.select('#tooltip').remove();
-    }  
+    }
   };
-  
+
   const getColor = value => {
     var colorScale = d3.scaleThreshold()
     .domain([2.5, 5, 15, 25, 35])
     .range(["#2ab6c5", "#03b082", "#fec866", "#fa7448", "#e63e50", "#940f42"]);
-    
     return value !== undefined ? colorScale(value) : '#b1ada4';
   };
 

@@ -1,29 +1,16 @@
 // components/Navbar.js
-import React, { useState, useEffect } from 'react';
-import { Button } from './Button';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+
+// Styles
 import '../styles/Navbar.css';
 
 const Navbar = () => {
   const [click, setClick] = useState(false);
-  const [button, setButton] = useState(true);
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
 
-  const showButton = () => {
-    if (window.innerWidth <= 960) {
-      setButton(false);
-    } else {
-      setButton(true);
-    }
-  };
-
-  useEffect(() => {
-    showButton();
-  }, []);
-
-  window.addEventListener('resize', showButton);
   return (
     <>
       <nav className='navbar'>
@@ -42,25 +29,16 @@ const Navbar = () => {
               </Link>
             </li>
             <li className='nav-item'>
-              <Link
-                to='/firstpage'
-                className='nav-links'
-                onClick={closeMobileMenu}
-              >
+              <Link to='/firstpage' className='nav-links' onClick={closeMobileMenu}>
                 Page 1
               </Link>
             </li>
             <li className='nav-item'>
-              <Link
-                to='/secondpage'
-                className='nav-links'
-                onClick={closeMobileMenu}
-              >
+              <Link to='/secondpage' className='nav-links' onClick={closeMobileMenu}>
                 Page 2
               </Link>
             </li>
           </ul>
-
         </div>
       </nav>
     </>
