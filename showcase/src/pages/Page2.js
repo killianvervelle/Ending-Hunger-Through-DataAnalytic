@@ -5,7 +5,7 @@ export default function PageTwo() {
 
   return (
     <>
-      <h1 className='products'>To be done</h1>
+      <h1>To be done</h1>
     </>
   );
 }

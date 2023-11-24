@@ -5,7 +5,7 @@ export default function PageOne() {
 
   return (
     <>
-      <h1 className='products'>To be done</h1>
+      <h1>Global monde avec slider ?</h1>
     </>
   );
 }
