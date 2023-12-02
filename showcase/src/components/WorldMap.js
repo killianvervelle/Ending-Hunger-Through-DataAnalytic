@@ -8,13 +8,27 @@ import * as d3 from 'd3';
 import '../styles/WorldMap.css';
 
 function WorldMap() {
-
   const mapRef = useRef();
   const navigate = useNavigate();
 
+  
+  const [shouldZoom, setShouldZoom] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const [popupData, setPopupData] = useState({ country: "", value: 0 });
+
+  
+  const zoom = d3.zoom().scaleExtent([1, 20]).on('zoom', handleZoom);
+
+  function handleZoom(event) {
+    const { transform } = event;
+    const zoomLevel = transform.k;
+    // Hide the popup when zooming
+    
+
+    d3.select('svg').selectAll('path').style('stroke-width', 1 / zoomLevel).attr('transform', transform);
+    setSelectedCountry(null);
+  }
 
   const mockData = [
     { id: 'FRA', value: 1.9 },
@@ -27,28 +41,36 @@ function WorldMap() {
   ];
 
   const handleClick = (event, d) => {
-    const countryId = d.properties.adm0_a3_us;
-    const countryInfo = mockData.find(country => country.id === countryId) || { id: countryId, value: 'Undefined' };
+    const countryId = d ? d.properties.adm0_a3_us : null;
 
-    // Open the new popup
-    setSelectedCountry(countryId);
-
-    // Set popup position and data
-    setPopupPosition({ x: event.clientX, y: event.clientY });
-    setPopupData({ country: countryInfo.id, value: countryInfo.value });
+    if (countryId) {
+      // If a country is clicked, show the popup
+      const countryInfo = mockData.find(country => country.id === countryId) || { id: countryId, value: 'Undefined' };
+      setSelectedCountry(countryId);
+      setPopupPosition({ x: event.clientX, y: event.clientY });
+      setPopupData({ country: countryInfo.id, value: countryInfo.value });
+      setShouldZoom(false);
+    } else {
+      console.log("HELLO")
+      // If clicked outside any country, hide the popup
+      setSelectedCountry(null);
+    }
   };
 
   useEffect(() => {
     // Importing the JSON file
     const worldGeojson = require('../assets/worldmap.json');
-
-    drawMap(worldGeojson, mockData);
-
+  
+    if (!shouldZoom) {
+      drawMap(worldGeojson, mockData);
+    }
+  
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  });
+  }, [shouldZoom]); // Add shouldZoom as a dependency
+  
 
   const drawMap = (geojson, data) => {
     const width = window.innerWidth;
@@ -68,7 +90,6 @@ function WorldMap() {
 
     const projection = d3.geoNaturalEarth1().fitSize([width, height], geojson);
     const path = d3.geoPath().projection(projection);
-    const zoom = d3.zoom().scaleExtent([1, 20]).on('zoom', handleZoom);
 
     svg.call(zoom);
 
@@ -87,42 +108,44 @@ function WorldMap() {
        .on('mouseout', handleMouseOut)
        .on('click', handleClick);
 
-    function handleZoom(event) {
-      const { transform } = event;
-      const zoomLevel = transform.k;
-
-      svg.selectAll('path').style('stroke-width', 1 / zoomLevel).attr('transform', transform);
-    }
+    
 
     function handleMouseOver(event, d) {
       const countryName = d.properties.name;
-
+    
       // Get the current fill color
       const currentColor = d3.select(this).style('fill');
-
+    
       // Lighten the color
       const lighterColor = d3.rgb(currentColor).brighter(0.5).toString();
-
+    
       d3.select(this).style('fill', lighterColor);
+    
+      const centroid = path.centroid(d);
 
-      const [x, y] = d3.pointer(event);
+      // Remove existing tooltip
+      svg.select('#tooltip').remove();
 
+      // Append a new text element for the tooltip
       svg.append('text')
         .attr('id', 'tooltip')
-        .attr('x', x)
-        .attr('y', y - 10)
+        .attr('x', centroid[0])
+        .attr('y', centroid[1])
         .attr('text-anchor', 'middle')
         .style('font-size', '14px')
         .style('font-weight', 'bold')
         .style('fill', 'black')
         .text(countryName);
     }
+    
 
     function handleMouseOut(event, d) {
       d3.select(this).style('fill', d => getColor(countryDataMap.get(d.properties.adm0_a3_us)));
 
       svg.select('#tooltip').remove();
     }
+
+    
   };
 
   const getColor = value => {
@@ -144,10 +167,23 @@ function WorldMap() {
     drawMap(require('../assets/worldmap.json'), mockData);
   };
 
+  const handleZoomIn = () => {
+    d3.select('svg').transition().call(zoom.scaleBy, 1.5);
+  };
+
+  const handleZoomOut = () => {
+    d3.select('svg').transition().call(zoom.scaleBy, 0.5);
+  };
+
   return (
     <div className="map-container" ref={mapRef}>
+      <div className="zoom-buttons" >
+        <button className="zoom-button" onClick={handleZoomIn}>+</button>
+        <button className="zoom-button" onClick={handleZoomOut}>-</button>
+      </div>
       {selectedCountry && (
         <div className="popup" style={{ left: popupPosition.x, top: popupPosition.y }}>
+          <button className="close-button" onClick={() => setSelectedCountry(null)}>X</button>
           <h3>{popupData.country}</h3>
           <p>Value: {popupData.value}</p>
           <button onClick={() => navigate(`/country/${selectedCountry}`)}>More</button>

@@ -1,24 +1,45 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import '../App.css';
 import '../styles/Country.css'
 import "../../node_modules/flag-icons/css/flag-icons.min.css";
 
 export default function Country() {
+  const [countryData, setCountryData] = useState(null);
+  const { id } = useParams();
 
-  const mockData = {
-    id : "12",
-    iso2 : "af",
-    iso3 : 'afg',
-    name : 'Afghanistan'
-  }
+  useEffect(() => {
+    const fetchCountryData = async () => {
+      try {
+        console.log(id)
+        // TODO : replace link with ours
+        const response = await fetch(`http://api.worldbank.org/v2/country/${id}?format=json`, { method: 'GET'} );
+        if (response.ok) {
+          const data = await response.json();
+          setCountryData(data);
+        } else {
+          // Handle error or not found case
+          console.error('Profile data not found');
+          setCountryData(null);
+        }
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+        setCountryData(null);
+      }
+    };
+
+    fetchCountryData();
+  }, [id]);
 
   return (
   <div className="page-container">
+    {countryData && (
     <div className="country-container">
-      <span className={`fi fi-${mockData.iso2}`}></span>
-      <h1 className="country-name">{mockData.name}</h1>
+      <span className={`fi fi-${countryData[1][0].iso2Code.toLowerCase()}`}></span>
+      <h1 className="country-name">{countryData[1][0].name}</h1>
     </div>
+    )}
     <div className="grid-container">
       <div className="top-left">
         {/* TODO: Add component for top left */}

@@ -22,8 +22,40 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  z-index: 1;
   justify-content: center;
 }
+
+/* Add these styles to your WorldMap.css file or adjust as needed */
+
+/* Add these styles to your WorldMap.css file or adjust as needed */
+
+.zoom-buttons {
+  position: absolute;
+  top: 100px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.zoom-button {
+  margin: 5px;
+  padding: 10px;
+  width: 40px; /* Set a fixed width for the buttons */
+  height: 40px; /* Set a fixed width for the buttons */
+  font-size: 18px;
+  background-color: #fff; /* White background */
+  color: #000000; /* Green text */
+  border: 1px solid #000000; /* Green border */
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.zoom-button:hover {
+  background-color: #f5f5f5; /* Light gray on hover */
+}
+
 
 .popup button {
   display: block;
@@ -39,4 +71,16 @@
 
 .popup button:hover {
   background-color: #037d8e; /* Change color on hover */
+}
+
+
+.close-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #555;
 }
