@@ -27,16 +27,6 @@ function WorldMap() {
     setSelectedCountry(null);
   }
 
-  const mockData = [
-    { id: 'FRA', value: 1.9 },
-    { id: 'BEL', value: 10 },
-    { id: 'ESP', value: 2.5 },
-    { id: 'AGO', value: 10 },
-    { id: 'DEU', value: 15 },
-    { id: 'CHE', value: 350 },
-    { id: 'ITA', value: 27 },
-  ];
-
   const handleClick = (event, d) => {
     const countryId = d ? d.properties.adm0_a3_us : null;
     const countryName = d ? d.properties.name : null;
@@ -47,7 +37,7 @@ function WorldMap() {
       const [name, countryData] = countryInfo;
       setSelectedCountry(countryId);
       setPopupPosition({ x: event.clientX, y: event.clientY });
-      setPopupData({ country: name, values: countryData.values[0] });
+      setPopupData({ country: name, iso3 : countryData.iso3 ,values: countryData.values[0] });
       setShouldZoom(false);
     } else {
       setSelectedCountry(null);
@@ -200,7 +190,7 @@ function WorldMap() {
           <button className="close-button" onClick={() => setSelectedCountry(null)}>X</button>
           <h3>{popupData.country}</h3>
           <p>Value: {popupData.values}</p>
-          <button onClick={() => navigate(`/country/${selectedCountry}`)}>More</button>
+          <button onClick={() => navigate(`/country/${popupData.iso3}`)}>More</button>
         </div>
       )}
     </div>
