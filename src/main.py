@@ -132,9 +132,22 @@ def nutritional_data_country(country_iso:str) -> str:
 
 @app.get("/undernourishement-data")
 def nutritional_data_country():
-    undernourishement_data = pd.read_csv("data/cleaned/undernourished_rate_cleaned.csv")
-    result_dict = undernourishement_data.set_index('country')[['iso2', 'iso3', 'value']].to_dict(orient='index')
-    return json.dumps(result_dict)
+    try:
+        undernourishement_data = pd.read_csv("data/cleaned/undernourished_rate_cleaned.csv")
+
+        json_data = {}
+        for _, row in undernourishement_data.iterrows():
+            country_name = str(row["country"])
+            iso2 = str(row["iso2"])
+            iso3 = str(row["iso3"])
+            values = [float(val) for val in row["value"].strip("[]").split(",")]
+
+            json_data[country_name] = {"iso2": iso2, "iso3": iso3, "values": values}
+
+        return json_data
+    except FileNotFoundError:
+        return {"error": "CSV file not found. Please ensure the file path is correct."}
+    
 # ******************************************************************************
 #                  API Utility functions
 # ******************************************************************************
