@@ -99,36 +99,46 @@ async def assets(filename: str):
 #                  API Endpoints
 # ******************************************************************************
  
+class CountryDataResponse(BaseModel):
+    country: dict
+
 @app.get("/nutritional-data-country/{country_iso}")
-def nutritional_data_country(country_iso:str) -> str:
-    iso2, country = get_iso2_and_country(ISO_ref, country_iso)
-    nutritional_data = pd.read_csv("data/cleaned/food_supply_country_cleaned.csv")
-    filtered_nutrional = nutritional_data[nutritional_data["country"] == country]
-    population_data = pd.read_csv("data/cleaned/population_cleaned.csv")
-    filtered_population = population_data[population_data["country"] == country]["value"].to_list()
-    undernourished_data = pd.read_csv("data\cleaned\severely_undernourished_people_years_cleaned.csv")
-    filtered_undernourished = undernourished_data[undernourished_data["country"] == country]
-    response_data = {
-        "country": {
-            "name": country,
-            "iso2": iso2,
-            "iso3": country_iso,
-            "population": filtered_population,
-            "population_undernourished": filter_df(filtered_undernourished, "Value"),
-            "production": filter_df(filtered_nutrional, "Production"),
-            "import_quantity": filter_df(filtered_nutrional, "Import Quantity"),
-            "stock_variation": filter_df(filtered_nutrional, "Stock Variation"),
-            "export_quantity": filter_df(filtered_nutrional, "Export Quantity"),
-            "domestic_supply": filter_df(filtered_nutrional, "Domestic supply quantity"),
-            "feed": filter_df(filtered_nutrional, "Feed"),
-            "seed": filter_df(filtered_nutrional, "Seed"),
-            "proteine_supply": filter_df(filtered_nutrional, "Protein supply quantity (g/capita/day)"),
-            "losses": filter_df(filtered_nutrional, "Losses"),
-            "residuals": filter_df(filtered_nutrional, "Residuals"),
-            "food_supply_kcal": filter_df(filtered_nutrional, "Food supply (kcal/capita/day)")
+def nutritional_data_country(country_iso:str, response_model=CountryDataResponse):
+    try:
+        iso2, country = get_iso2_and_country(ISO_ref, country_iso)
+
+        nutritional_data = pd.read_csv("data/cleaned/food_supply_country_cleaned.csv")
+        filtered_nutrional = nutritional_data[nutritional_data["country"] == country]
+
+        population_data = pd.read_csv("data/cleaned/population_cleaned.csv")
+        filtered_population = population_data[population_data["country"] == country]["value"].to_list()
+
+        undernourished_data = pd.read_csv("data/cleaned/severely_undernourished_people_years_cleaned.csv")
+        filtered_undernourished = undernourished_data[undernourished_data["country"] == country]
+
+        response_data = {
+            "country": {
+                "name": country,
+                "iso2": iso2,
+                "iso3": country_iso,
+                "population": filtered_population,
+                "population_undernourished": filter_df(filtered_undernourished, "Value"),
+                "production": filter_df(filtered_nutrional, "Production"),
+                "import_quantity": filter_df(filtered_nutrional, "Import Quantity"),
+                "stock_variation": filter_df(filtered_nutrional, "Stock Variation"),
+                "export_quantity": filter_df(filtered_nutrional, "Export Quantity"),
+                "domestic_supply": filter_df(filtered_nutrional, "Domestic supply quantity"),
+                "feed": filter_df(filtered_nutrional, "Feed"),
+                "seed": filter_df(filtered_nutrional, "Seed"),
+                "proteine_supply": filter_df(filtered_nutrional, "Protein supply quantity (g/capita/day)"),
+                "losses": filter_df(filtered_nutrional, "Losses"),
+                "residuals": filter_df(filtered_nutrional, "Residuals"),
+                "food_supply_kcal": filter_df(filtered_nutrional, "Food supply (kcal/capita/day)")
+            }
         }
-    }
-    return json.dumps(response_data)
+        return response_data
+    except FileNotFoundError:
+        return {"error": "CSV file not found. Please ensure the file path is correct."}
 
 @app.get("/undernourishement-data")
 def nutritional_data_country():

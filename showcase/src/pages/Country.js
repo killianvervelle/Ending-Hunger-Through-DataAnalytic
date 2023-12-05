@@ -15,7 +15,7 @@ export default function Country() {
       try {
         // TODO : replace link with ours
 
-        const response = await fetch(`http://api.worldbank.org/v2/country/${id}?format=json`, { method: 'GET'} );
+        const response = await fetch(`http://127.0.0.1:8000/nutritional-data-country/${id}`, { method: 'GET'} );
         if (response.ok) {
           const data = await response.json();
           console.log(data)
@@ -38,8 +38,8 @@ export default function Country() {
   <div className="page-container">
     {countryData && (
     <div className="country-container">
-      <span className={`fi fi-${countryData[1][0].iso2Code.toLowerCase()}`}></span>
-      <h1 className="country-name">{countryData[1][0].name}</h1>
+      <span className={`fi fi-${countryData.country.iso2.toLowerCase()}`}></span>
+      <h1 className="country-name">{countryData.country.name}</h1>
     </div>
     )}
     <div className="parent-container">
