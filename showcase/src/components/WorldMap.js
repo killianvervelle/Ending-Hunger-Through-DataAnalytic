@@ -30,6 +30,52 @@ function WorldMap() {
     setSelectedCountry(null);
   }
 
+  const ValuesArray = [];
+  const lastValuesArray = [];
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/undernourishement-data");
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Fetch error:", error);
+      return null;
+    }
+  };
+  
+  const processCountryData = (data) => {
+    for (const country in data) {
+      const iso3 = data[country].iso3;
+      const valueString = data[country].value;
+      if (valueString !== undefined) {
+        const valueArray = JSON.parse(valueString);
+        const lastRate = valueArray[valueArray.length - 1];
+        ValuesArray.push({ iso3, values: valueArray });
+        lastValuesArray.push({ id: iso3, value: lastRate});
+      }
+    }
+  };
+  
+  const fetchDataAndProcess = async () => {
+    try {
+      const data = await fetchData();
+      if (data) {
+        const ValuesArray = processCountryData(data);
+        console.log(ValuesArray);
+      } else {
+        console.error("Data is null");
+      }
+    } catch (error) {
+      console.error("Unexpected error:", error);
+    }
+  };
+
+  fetchDataAndProcess();
+
   const mockData = [
     { id: 'FRA', value: 1.9 },
     { id: 'BEL', value: 10 },
@@ -45,7 +91,8 @@ function WorldMap() {
 
     if (countryId) {
       // If a country is clicked, show the popup
-      const countryInfo = mockData.find(country => country.id === countryId) || { id: countryId, value: 'Undefined' };
+      const countryInfo = lastValuesArray.find(country => country.id === countryId) || { id: countryId, value: 'Undefined' };
+      console.log(countryInfo)
       setSelectedCountry(countryId);
       setPopupPosition({ x: event.clientX, y: event.clientY });
       setPopupData({ country: countryInfo.id, value: countryInfo.value });
@@ -62,7 +109,7 @@ function WorldMap() {
     const worldGeojson = require('../assets/worldmap.json');
   
     if (!shouldZoom) {
-      drawMap(worldGeojson, mockData);
+      drawMap(worldGeojson, lastValuesArray);
     }
   
     window.addEventListener('resize', handleResize);
@@ -108,7 +155,6 @@ function WorldMap() {
        .on('mouseout', handleMouseOut)
        .on('click', handleClick);
 
-    
 
     function handleMouseOver(event, d) {
       const countryName = d.properties.name;
@@ -144,14 +190,12 @@ function WorldMap() {
 
       svg.select('#tooltip').remove();
     }
-
-    
   };
 
   const getColor = value => {
     var colorScale = d3.scaleThreshold()
-    .domain([2.5, 5, 15, 25, 35])
-    .range(["#2ab6c5", "#03b082", "#fec866", "#fa7448", "#e63e50", "#940f42"]);
+    .domain([5, 10, 100])
+    .range(["#03b082", "#fa7448", "#e63e50"]);
     return value !== undefined ? colorScale(value) : '#b1ada4';
   };
 
@@ -164,7 +208,7 @@ function WorldMap() {
       .attr('width', newWidth)
       .attr('height', newHeight);
 
-    drawMap(require('../assets/worldmap.json'), mockData);
+    drawMap(require('../assets/worldmap.json'), lastValuesArray);
   };
 
   const handleZoomIn = () => {

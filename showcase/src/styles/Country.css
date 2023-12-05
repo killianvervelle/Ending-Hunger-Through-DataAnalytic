@@ -2,6 +2,17 @@
   padding: 20px 50px 30px
 }
 
+.parent-container {
+  display: flex; /* Use flexbox */
+  justify-content: space-between; /* Align containers horizontally with space between them */
+}
+
+.child-container {
+  display: grid;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .grid-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -10,12 +21,11 @@
 }
 
 .top-left,
-.top-right,
 .bottom-left,
 .bottom-right {
   height: 200px;
   border: 1px solid #ccc; /* Add borders or other styling as needed */
-  padding: 25px; /* Adjust the padding as needed */
+  padding: 15px; /* Adjust the padding as needed */
 }
 
 span {
@@ -23,6 +33,12 @@ span {
   background-position: 50%;
   background-repeat: no-repeat;
   font-size: 2em;
+}
+
+.top-right {
+  height: 430px;
+  border: 1px solid #ccc; /* Add borders or other styling as needed */
+  padding: 15px; /* Adjust the padding as needed */
 }
 
 .country-name {

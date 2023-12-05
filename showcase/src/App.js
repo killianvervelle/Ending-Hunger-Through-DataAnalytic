@@ -17,7 +17,7 @@ function App() {
       <Navbar />
         <Routes>
           <Route path="/" exact element={<Home />} />
-          <Route path="/country/:id" exact element={<Country />} />
+          <Route path="/country" exact element={<Country />} />
           <Route path="/firstpage" exact element={<PageOne />} />
           <Route path="/secondpage" exact element={<PageTwo />} />
         </Routes>
@@ -26,5 +26,4 @@ function App() {
     </div>
   );
 }
-
 export default App;
