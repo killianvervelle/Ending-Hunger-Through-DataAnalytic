@@ -1,6 +1,4 @@
 import os
-import sys
-import json
 import logging
 import pandas as pd
 import numpy as np
@@ -29,22 +27,12 @@ ISO_ref = pd.read_excel("data\iso_list.xlsx")
 #                  FastAPI entry point declaration
 # *****************************************************************************
 
-rootapp = FastAPI()
+app = FastAPI(title=NAME, version=VERSION, 
+        description=DESCRIPTION, openapi_url='/specification')
 
-app = FastAPI(openapi_url='/specification')
-app.add_middleware(CORSMiddleware, allow_origins=["*"], 
+app.add_middleware(CORSMiddleware, allow_origins=["*"],
     allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
-def custom_openapi():
-    if app.openapi_schema:
-        return app.openapi_schema
-    openapi_schema = get_openapi(title=NAME, version=VERSION, 
-        description=DESCRIPTION, routes=app.routes,)
-    app.openapi_schema = openapi_schema
-    return app.openapi_schema
-
-app.openapi = custom_openapi
-rootapp.mount(URL_PREFIX, app)
 
 # *****************************************************************************
 #                  Set the logging for the service
@@ -56,16 +44,36 @@ logger.info('Starting app with URL_PREFIX=' + URL_PREFIX)
 # ******************************************************************************
 #             Classes declaration - for input and output models
 # ******************************************************************************
+class CountryDataResponseModel(BaseModel):
+    name: str
+    iso2: str
+    iso3: str
+    population: list
+    population_undernourished: list
+    production: list
+    import_quantity: list
+    stock_variation: list
+    export_quantity: list
+    domestic_supply: list
+    feed: list
+    seed: list
+    proteine_supply: list
+    losses: list
+    residuals: list
+    food_supply_kcal: list
 
+# Define a Pydantic model for the response structure
+class CountryDataResponse(BaseModel):
+    country: CountryDataResponseModel
 
 # *****************************************************************************
 #                  Done once when micro-service is starting up
 # *****************************************************************************
 
 async def startup_event():
-    return None   
+    return None
 
-rootapp.add_event_handler("startup", startup_event)
+app.add_event_handler("startup", startup_event)
 
 # ******************************************************************************
 #                  API Route definition
@@ -98,47 +106,6 @@ async def assets(filename: str):
 # ******************************************************************************
 #                  API Endpoints
 # ******************************************************************************
- 
-class CountryDataResponse(BaseModel):
-    country: dict
-
-@app.get("/nutritional-data-country/{country_iso}")
-def nutritional_data_country(country_iso:str, response_model=CountryDataResponse):
-    try:
-        iso2, country = get_iso2_and_country(ISO_ref, country_iso)
-
-        nutritional_data = pd.read_csv("data/cleaned/food_supply_country_cleaned.csv")
-        filtered_nutrional = nutritional_data[nutritional_data["country"] == country]
-
-        population_data = pd.read_csv("data/cleaned/population_cleaned.csv")
-        filtered_population = population_data[population_data["country"] == country]["value"].to_list()
-
-        undernourished_data = pd.read_csv("data/cleaned/severely_undernourished_people_years_cleaned.csv")
-        filtered_undernourished = undernourished_data[undernourished_data["country"] == country]
-
-        response_data = {
-            "country": {
-                "name": country,
-                "iso2": iso2,
-                "iso3": country_iso,
-                "population": filtered_population,
-                "population_undernourished": filter_df(filtered_undernourished, "Value"),
-                "production": filter_df(filtered_nutrional, "Production"),
-                "import_quantity": filter_df(filtered_nutrional, "Import Quantity"),
-                "stock_variation": filter_df(filtered_nutrional, "Stock Variation"),
-                "export_quantity": filter_df(filtered_nutrional, "Export Quantity"),
-                "domestic_supply": filter_df(filtered_nutrional, "Domestic supply quantity"),
-                "feed": filter_df(filtered_nutrional, "Feed"),
-                "seed": filter_df(filtered_nutrional, "Seed"),
-                "proteine_supply": filter_df(filtered_nutrional, "Protein supply quantity (g/capita/day)"),
-                "losses": filter_df(filtered_nutrional, "Losses"),
-                "residuals": filter_df(filtered_nutrional, "Residuals"),
-                "food_supply_kcal": filter_df(filtered_nutrional, "Food supply (kcal/capita/day)")
-            }
-        }
-        return response_data
-    except FileNotFoundError:
-        return {"error": "CSV file not found. Please ensure the file path is correct."}
 
 @app.get("/undernourishement-data")
 def nutritional_data_country():
@@ -157,7 +124,49 @@ def nutritional_data_country():
         return json_data
     except FileNotFoundError:
         return {"error": "CSV file not found. Please ensure the file path is correct."}
-    
+
+
+@app.get("/nutritional-data-country/{country_iso}")
+def nutritional_data_country(country_iso:str):
+    try:
+        iso2, country = get_iso2_and_country(ISO_ref, country_iso)
+        print(iso2, country)
+
+        nutritional_data = pd.read_csv("data/cleaned/food_supply_country_cleaned.csv")
+        filtered_nutrional = nutritional_data[nutritional_data["country"] == country]
+
+        population_data = pd.read_csv("data/cleaned/population_cleaned.csv")
+        filtered_population = population_data[population_data["country"] == country]["value"].to_list()
+
+        undernourished_data = pd.read_csv("data/cleaned/severely_undernourished_people_years_cleaned.csv")
+        filtered_undernourished = undernourished_data[undernourished_data["country"] == country]
+
+        country_data = CountryDataResponseModel(
+            name=country,
+            iso2=iso2,
+            iso3=country_iso,
+            population=filtered_population,
+            population_undernourished=filter_df(filtered_undernourished, "Value"),
+            production=filter_df(filtered_nutrional, "Production"),
+            import_quantity=filter_df(filtered_nutrional, "Import Quantity"),
+            stock_variation=filter_df(filtered_nutrional, "Stock Variation"),
+            export_quantity=filter_df(filtered_nutrional, "Export Quantity"),
+            domestic_supply=filter_df(filtered_nutrional, "Domestic supply quantity"),
+            feed=filter_df(filtered_nutrional, "Feed"),
+            seed=filter_df(filtered_nutrional, "Seed"),
+            proteine_supply=filter_df(filtered_nutrional, "Protein supply quantity (g/capita/day)"),
+            losses=filter_df(filtered_nutrional, "Losses"),
+            residuals=filter_df(filtered_nutrional, "Residuals"),
+            food_supply_kcal=filter_df(filtered_nutrional, "Food supply (kcal/capita/day)")
+        )
+
+        response_data = CountryDataResponse(country=country_data)
+
+        return response_data
+    except FileNotFoundError:
+        return {"error": "CSV file not found. Please ensure the file path is correct."}
+
+
 # ******************************************************************************
 #                  API Utility functions
 # ******************************************************************************
