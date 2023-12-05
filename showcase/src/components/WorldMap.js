@@ -39,12 +39,15 @@ function WorldMap() {
 
   const handleClick = (event, d) => {
     const countryId = d ? d.properties.adm0_a3_us : null;
+    const countryName = d ? d.properties.name : null;
 
     if (countryId) { // TODO : THIS
-      const countryInfo = mockData.find(country => country.id === countryId) || { id: countryId, value: 'Undefined' };
+      const countryInfo = Object.entries(data).find(([name, info]) => info.iso3 === countryId) || [countryName, { iso3: countryId, values: ['Undefined'] }];
+      console.log(countryInfo)
+      const [name, countryData] = countryInfo;
       setSelectedCountry(countryId);
       setPopupPosition({ x: event.clientX, y: event.clientY });
-      setPopupData({ country: countryInfo.id, value: countryInfo.value });
+      setPopupData({ country: name, values: countryData.values[0] });
       setShouldZoom(false);
     } else {
       setSelectedCountry(null);
@@ -161,8 +164,8 @@ function WorldMap() {
 
   const getColor = value => {
     var colorScale = d3.scaleThreshold()
-    .domain([2.5, 5, 15, 25, 35])
-    .range(["#2ab6c5", "#03b082", "#fec866", "#fa7448", "#e63e50", "#940f42"]);
+    .domain([5, 15, 100])
+    .range(["#03b082", "#fa7448", "#940f42"]);
     return value !== undefined ? colorScale(value) : '#b1ada4';
   };
 
@@ -196,7 +199,7 @@ function WorldMap() {
         <div className="popup" style={{ left: popupPosition.x, top: popupPosition.y }}>
           <button className="close-button" onClick={() => setSelectedCountry(null)}>X</button>
           <h3>{popupData.country}</h3>
-          <p>Value: {popupData.value}</p>
+          <p>Value: {popupData.values}</p>
           <button onClick={() => navigate(`/country/${selectedCountry}`)}>More</button>
         </div>
       )}
