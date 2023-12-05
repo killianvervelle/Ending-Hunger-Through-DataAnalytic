@@ -33,7 +33,6 @@ app = FastAPI(title=NAME, version=VERSION,
 app.add_middleware(CORSMiddleware, allow_origins=["*"],
     allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
-
 # *****************************************************************************
 #                  Set the logging for the service
 # *****************************************************************************
@@ -44,6 +43,7 @@ logger.info('Starting app with URL_PREFIX=' + URL_PREFIX)
 # ******************************************************************************
 #             Classes declaration - for input and output models
 # ******************************************************************************
+
 class CountryDataResponseModel(BaseModel):
     name: str
     iso2: str
@@ -62,7 +62,6 @@ class CountryDataResponseModel(BaseModel):
     residuals: list
     food_supply_kcal: list
 
-# Define a Pydantic model for the response structure
 class CountryDataResponse(BaseModel):
     country: CountryDataResponseModel
 
@@ -100,7 +99,6 @@ def showcase():
 @app.get("/assets/{filename}")
 async def assets(filename: str):
     logger.info("route '/assets/{}' called".format(filename))
-
     return FileResponse(os.path.dirname(os.getcwd())+ "/showcase/assets/" + filename)
 
 # ******************************************************************************
@@ -108,7 +106,7 @@ async def assets(filename: str):
 # ******************************************************************************
 
 @app.get("/undernourishement-data")
-def nutritional_data_country():
+def undernourishement_data():
     try:
         undernourishement_data = pd.read_csv("data/cleaned/undernourished_rate_cleaned.csv")
 
@@ -125,12 +123,10 @@ def nutritional_data_country():
     except FileNotFoundError:
         return {"error": "CSV file not found. Please ensure the file path is correct."}
 
-
 @app.get("/nutritional-data-country/{country_iso}")
 def nutritional_data_country(country_iso:str):
     try:
         iso2, country = get_iso2_and_country(ISO_ref, country_iso)
-        print(iso2, country)
 
         nutritional_data = pd.read_csv("data/cleaned/food_supply_country_cleaned.csv")
         filtered_nutrional = nutritional_data[nutritional_data["country"] == country]
