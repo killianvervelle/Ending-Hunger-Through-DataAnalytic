@@ -109,16 +109,13 @@ async def assets(filename: str):
 def undernourishement_data():
     try:
         undernourishement_data = pd.read_csv("data/cleaned/undernourished_rate_cleaned.csv")
-
         json_data = {}
         for _, row in undernourishement_data.iterrows():
             country_name = str(row["country"])
             iso2 = str(row["iso2"])
             iso3 = str(row["iso3"])
-            values = [float(val) for val in row["value"].strip("[]").split(",")]
-
+            values = [float(val.strip(" '")) for val in row["value"].strip("[]").split(",")]
             json_data[country_name] = {"iso2": iso2, "iso3": iso3, "values": values}
-
         return json_data
     except FileNotFoundError:
         return {"error": "CSV file not found. Please ensure the file path is correct."}
