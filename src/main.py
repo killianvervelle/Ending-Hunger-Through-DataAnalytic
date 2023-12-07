@@ -60,6 +60,7 @@ class CountryDataResponseModel(BaseModel):
     proteine_supply: list
     losses: list
     residuals: list
+    food: list
     food_supply_kcal: list
 
 class CountryDataResponse(BaseModel):
@@ -150,6 +151,7 @@ def nutritional_data_country(country_iso:str):
             proteine_supply=filter_df(filtered_nutrional, "Protein supply quantity (g/capita/day)"),
             losses=filter_df(filtered_nutrional, "Losses"),
             residuals=filter_df(filtered_nutrional, "Residuals"),
+            food=filter_df(filtered_nutrional, "Food"),
             food_supply_kcal=filter_df(filtered_nutrional, "Food supply (kcal/capita/day)")
         )
 

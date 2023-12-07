@@ -18,6 +18,7 @@ export default function Country() {
         const response = await fetch(`http://127.0.0.1:8000/nutritional-data-country/${id}`, { method: 'GET'} );
         if (response.ok) {
           const data = await response.json();
+          console.log(data)
           setCountryData(data);
         } else {
           console.error('Profile data not found');
@@ -69,27 +70,25 @@ export default function Country() {
       if (data && Object.keys(data).length > 0) {
         d3.select(chartRef.current).selectAll('*').remove();
   
-        const margin = { top: 20, right: 20, bottom: 20, left: 30 };
-        const width = 400 - margin.left - margin.right; // Increase the width
+        const margin = { top: 20, right: 40, bottom: 20, left:50 };
+        const width = 600 - margin.left - margin.right;
         const height = 400 - margin.top - margin.bottom;
         const svg = d3.select(chartRef.current)
           .append('svg')
           .attr('width', width + margin.left + margin.right)
           .attr('height', height + margin.top + margin.bottom)
           .append('g')
-          .attr('transform', `translate(${margin.left},${margin.top})`);
+          .attr('transform', `translate(${margin.right},${margin.top})`);
         const categoriesSet1 = ['production', 'import_quantity', 'stock_variation'];
         const filteredData1 = Object.fromEntries(
           Object.entries(data)
             .filter(([key, value]) => categoriesSet1.includes(key))
         );
-        const valuesSet1 = categoriesSet1.map(category => data[category]);
-        const categoriesSet2 = ['export_quantity', 'feed', 'losses', 'residuals', 'seed'];
+        const categoriesSet2 = ['export_quantity', 'feed', 'losses', 'residuals', 'seed', 'food'];
         const filteredData2 = Object.fromEntries(
           Object.entries(data)
             .filter(([key, value]) => categoriesSet2.includes(key))
         );
-        const valuesSet2 = categoriesSet2.map(category => data[category]);
 
         const dataArray1 = Object.keys(filteredData1).map(category => ({
           [category]: filteredData1[category],
@@ -130,7 +129,7 @@ export default function Country() {
   
         const colorSet2 = d3.scaleOrdinal()
           .domain(categoriesSet2)
-          .range(['#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f']);
+          .range(['#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#ffbb78']);
   
         // Render Set 1 bars
         svg.selectAll()
@@ -142,10 +141,10 @@ export default function Country() {
           .data(d => d)
           .enter()
           .append('rect')
-          .attr('x', d => xScale(d.data))
+          .attr('x', d => xScaleSet1('Input')) // Set x position for Set 1 bars
           .attr('y', d => yScale(d[1]))
           .attr('height', d => yScale(d[0]) - yScale(d[1]))
-          .attr('width', d => xScaleSet1.bandwidth()); // Use the bandwidth of the first set of labels
+          .attr('width', d => xScaleSet1.bandwidth());
   
         // Render Set 2 bars
         svg.selectAll()
@@ -157,7 +156,7 @@ export default function Country() {
           .data(d => d)
           .enter()
           .append('rect')
-          .attr('x', d => xScale(d.data))
+          .attr('x', d => xScaleSet2('Output')) // Set x position for Set 2 bars
           .attr('y', d => yScale(d[1]))
           .attr('height', d => yScale(d[0]) - yScale(d[1]))
           .attr('width', d => xScaleSet2.bandwidth());
@@ -179,7 +178,7 @@ export default function Country() {
           .enter()
           .append('g')
           .attr('class', 'legendSet1')
-          .attr('transform', (d, i) => `translate(${width - 120},${i * 20})`);
+          .attr('transform', (d, i) => `translate(${width - 230},${i * 20})`);
   
         legendSet1.append('rect')
           .attr('width', 15)
@@ -199,7 +198,7 @@ export default function Country() {
           .enter()
           .append('g')
           .attr('class', 'legendSet2')
-          .attr('transform', (d, i) => `translate(${width},${i * 20})`);
+          .attr('transform', (d, i) => `translate(${width - 80},${i * 20})`);
   
         legendSet2.append('rect')
           .attr('width', 15)
