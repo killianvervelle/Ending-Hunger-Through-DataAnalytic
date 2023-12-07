@@ -1,10 +1,11 @@
 .page-container {
-  padding: 20px 50px 30px
+  padding: 20px 50px 120px;
+  background-color: rgb(255, 255, 255);
 }
 
 .parent-container {
-  display: flex; /* Use flexbox */
-  justify-content: space-between; /* Align containers horizontally with space between them */
+  display: flex; 
+  justify-content: space-between;
 }
 
 .child-container {

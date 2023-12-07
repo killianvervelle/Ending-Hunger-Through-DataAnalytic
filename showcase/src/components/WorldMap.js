@@ -1,6 +1,7 @@
 // components/WorldMap.js
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { Line } from 'react-chartjs-2';
 
 import * as d3 from 'd3';
 
@@ -14,7 +15,7 @@ function WorldMap() {
   const [shouldZoom, setShouldZoom] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
-  const [popupData, setPopupData] = useState({ country: "", value: 0 });
+  const [popupData, setPopupData] = useState({ country: "", value: 0, values: []});
   const [data, setData] = useState([]);
 
   
@@ -37,7 +38,7 @@ function WorldMap() {
       const [name, countryData] = countryInfo;
       setSelectedCountry(countryId);
       setPopupPosition({ x: event.clientX, y: event.clientY });
-      setPopupData({ country: name, iso3 : countryData.iso3 ,values: countryData.values[0] });
+      setPopupData({ country: name, iso3 : countryData.iso3 , value: countryData.values[countryData.values.length -1], values: countryData.values});
       setShouldZoom(false);
     } else {
       setSelectedCountry(null);
@@ -61,6 +62,67 @@ function WorldMap() {
     fetchData();
   }, []);
 
+  const ChartComponent = ({ data }) => {
+    const chartRef = useRef(null);
+  
+    useEffect(() => {
+      if (data && data.length > 0) {
+        d3.select(chartRef.current).selectAll('*').remove();
+
+        const margin = { top: 20, right: 20, bottom: 20, left: 30 };
+        const width = 200 - margin.left - margin.right;
+        const height = 140 - margin.top - margin.bottom;
+        const svg = d3.select(chartRef.current)
+          .append('svg')
+          .attr('width', width + margin.left + margin.right)
+          .attr('height', height + margin.top + margin.bottom)
+          .append('g')
+          .attr('transform', `translate(${margin.left},${margin.top})`);
+        
+        const xLabels = ['2015', '2016', '2017', '2018', '2019', '2020'];
+        const dataPoints = xLabels.map((label, i) => ({label, value: data[i]}));
+
+        const xScale = d3.scalePoint()
+          .domain(xLabels)
+          .range([0, width])
+          .padding(0.5);
+        
+        const yScale = d3.scaleLinear()
+          .domain([0, d3.max(data)])
+          .range([height, 0]);
+        
+        const line = d3.line()
+          .x(d => xScale(d.label))
+          .y(d => yScale(d.value));
+
+        svg.append('path')
+          .datum(dataPoints)
+          .attr('fill', 'none')
+          .attr('stroke', 'red')
+          .attr('stroke-width', 1.5)
+          .attr('d', line);
+
+        svg.append('text')
+          .attr('x', width / 2)
+          .attr('y', -margin.top / 2)
+          .attr('text-anchor', 'middle')
+          .style('font-size', '10px')
+          .style('font-weight', 'bold')
+          .text('Malnutrition Rate Over 6 Years');
+  
+        svg.append('g')
+          .attr('transform', `translate(0,${height})`)
+          .call(d3.axisBottom(xScale))
+  
+        svg.append('g')
+          .call(d3.axisLeft(yScale));
+      }
+    }, [data]);
+  
+    return <div ref={chartRef}></div>;
+  };
+
+
   useEffect(() => {
     const worldGeojson = require('../assets/worldmap.json');
   
@@ -73,7 +135,6 @@ function WorldMap() {
       window.removeEventListener('resize', handleResize);
     };
   }, [shouldZoom, data]);
-  
 
   const drawMap = (geojson, data) => {
     
@@ -188,8 +249,8 @@ function WorldMap() {
       {selectedCountry && (
         <div className="popup" style={{ left: popupPosition.x, top: popupPosition.y }}>
           <button className="close-button" onClick={() => setSelectedCountry(null)}>X</button>
-          <h3>{popupData.country}</h3>
-          <p>Value: {popupData.values}</p>
+          <h4 style={{ textAlign: 'center' }}>{popupData.country}</h4>
+          <ChartComponent data={popupData.values} />
           <button onClick={() => navigate(`/country/${popupData.iso3}`)}>More</button>
         </div>
       )}

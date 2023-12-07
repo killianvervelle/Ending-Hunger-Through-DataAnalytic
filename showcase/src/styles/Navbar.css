@@ -18,6 +18,10 @@
   max-width: 1500px;
 }
 
+.navbar-text {
+  font-size: 25px; /* Adjust the font size as needed */
+}
+
 .navbar-logo {
   color: #fff;
   justify-self: start;
