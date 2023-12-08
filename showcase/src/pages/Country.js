@@ -69,7 +69,6 @@ export default function Country() {
     useEffect(() => {
       if (data && Object.keys(data).length > 0) {
         d3.select(chartRef.current).selectAll('*').remove();
-  
         const margin = { top: 20, right: 40, bottom: 20, left:50 };
         const width = 600 - margin.left - margin.right;
         const height = 400 - margin.top - margin.bottom;
@@ -90,12 +89,12 @@ export default function Country() {
             .filter(([key, value]) => categoriesSet2.includes(key))
         );
 
-        const dataArray1 = Object.keys(filteredData1).map(category => ({
-          [category]: filteredData1[category],
+        const dataArray1 = Object.keys(filteredData1).map(categoriesSet1 => ({
+          [categoriesSet1]: filteredData1[categoriesSet1],
         }));
         
-        const dataArray2 = Object.keys(filteredData2).map(category => ({
-          [category]: filteredData2[category],
+        const dataArray2 = Object.keys(filteredData2).map(categoriesSet2 => ({
+          [categoriesSet2]: filteredData2[categoriesSet2],
         }));
   
         const stackSet1 = d3.stack().keys(Object.keys(filteredData1));
@@ -113,13 +112,11 @@ export default function Country() {
         .domain(['Output'])
         .range([width / 2, width]) 
         .padding(0.1);
-  
-        const xScale = label => (String(label).startsWith('Input') ? xScaleSet1(label) : xScaleSet2(label));
-  
+
         const yScale = d3.scaleLinear()
           .domain([0, Math.max(
-            d3.max(stackedDataSet1, d => d3.max(d, d => d[1])),
-            d3.max(stackedDataSet2, d => d3.max(d, d => d[1]))
+            d3.max(stackedDataSet2, d => d3.max(d, d => d[1])),
+            d3.max(stackedDataSet1, d => d3.max(d, d => d[1]))
           )])
           .range([height, 0]);
   
@@ -144,7 +141,29 @@ export default function Country() {
           .attr('x', d => xScaleSet1('Input')) // Set x position for Set 1 bars
           .attr('y', d => yScale(d[1]))
           .attr('height', d => yScale(d[0]) - yScale(d[1]))
-          .attr('width', d => xScaleSet1.bandwidth());
+          .attr('width', d => xScaleSet1.bandwidth())
+          .on('mouseover', function (event, d) {
+            d3.select(this)
+              .transition()
+              .duration(100)
+              .attr('opacity', 0.5)
+            console.log('Data:', d.data)
+            const [key, value] = Object.entries(d.data)[0]; 
+            const text = `${key}: ${value}`;
+            const xPosition = xScaleSet1('Input') + xScaleSet1('Input')/2;
+            const yPosition = (yScale(d[0]) + yScale(d[1])) / 2;
+            svg.append('text')
+              .attr('class', 'value-label')
+              .attr('x', xPosition)  
+              .attr('y', yPosition)
+              .text(text);
+            })
+          .on('mouseout', function () {
+            d3.select(this)
+              .transition()
+              .duration(100)
+              .attr('opacity', 1)
+            svg.select('.value-label').remove()});
   
         // Render Set 2 bars
         svg.selectAll()
@@ -156,18 +175,40 @@ export default function Country() {
           .data(d => d)
           .enter()
           .append('rect')
-          .attr('x', d => xScaleSet2('Output')) // Set x position for Set 2 bars
+          .attr('x', d => xScaleSet2('Output'))
           .attr('y', d => yScale(d[1]))
           .attr('height', d => yScale(d[0]) - yScale(d[1]))
-          .attr('width', d => xScaleSet2.bandwidth());
+          .attr('width', d => xScaleSet2.bandwidth())
+          .on('mouseover', function (event, d) {
+            d3.select(this)
+              .transition()
+              .duration(100)
+              .attr('opacity', 0.5)
+            console.log('Data:', d.data)
+            const [key, value] = Object.entries(d.data)[0]; 
+            const text = `${key}: ${value}`;
+            const xPosition = xScaleSet2('Output') + xScaleSet2.bandwidth() / 2;
+            const yPosition = (yScale(d[0]) + yScale(d[1])) / 2;
+            svg.append('text')
+              .attr('class', 'value-label')
+              .attr('x', xPosition)  
+              .attr('y', yPosition)
+              .text(text)})
+          .on('mouseout', function () {
+            d3.select(this)
+              .transition()
+              .duration(100)
+              .attr('opacity', 1)
+            svg.select('.value-label').remove()});
+
   
         svg.append('g')
           .attr('transform', `translate(0,${height})`)
           .call(d3.axisBottom(xScaleSet1).tickSizeOuter(0));
 
         svg.append('g')
-        .attr('transform', `translate(0,${height})`)
-        .call(d3.axisBottom(xScaleSet2).tickSizeOuter(0)); 
+          .attr('transform', `translate(0,${height})`)
+          .call(d3.axisBottom(xScaleSet2).tickSizeOuter(0)); 
   
         svg.append('g')
           .call(d3.axisLeft(yScale));

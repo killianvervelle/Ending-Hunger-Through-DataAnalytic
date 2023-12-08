@@ -145,13 +145,13 @@ def nutritional_data_country(country_iso:str):
             import_quantity=filter_df(filtered_nutrional, "Import Quantity"),
             stock_variation=filter_df(filtered_nutrional, "Stock Variation"),
             export_quantity=filter_df(filtered_nutrional, "Export Quantity"),
-            domestic_supply=filter_df(filtered_nutrional, "Domestic supply quantity"),
             feed=filter_df(filtered_nutrional, "Feed"),
-            seed=filter_df(filtered_nutrional, "Seed"),
-            proteine_supply=filter_df(filtered_nutrional, "Protein supply quantity (g/capita/day)"),
             losses=filter_df(filtered_nutrional, "Losses"),
             residuals=filter_df(filtered_nutrional, "Residuals"),
+            seed=filter_df(filtered_nutrional, "Seed"),
             food=filter_df(filtered_nutrional, "Food"),
+            domestic_supply=filter_df(filtered_nutrional, "Domestic supply quantity"),
+            proteine_supply=filter_df(filtered_nutrional, "Protein supply quantity (g/capita/day)"),
             food_supply_kcal=filter_df(filtered_nutrional, "Food supply (kcal/capita/day)")
         )
 
