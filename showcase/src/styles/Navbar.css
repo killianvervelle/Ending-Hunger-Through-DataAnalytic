@@ -19,7 +19,7 @@
 }
 
 .navbar-text {
-  font-size: 25px; /* Adjust the font size as needed */
+  font-size: 15px; /* Adjust the font size as needed */
 }
 
 .navbar-logo {
@@ -28,7 +28,7 @@
   margin-left: 20px;
   cursor: pointer;
   text-decoration: none;
-  font-size: 2rem;
+  font-size: 1.2rem;
   display: flex;
   align-items: center;
 }
