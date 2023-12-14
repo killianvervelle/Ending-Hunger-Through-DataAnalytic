@@ -23,7 +23,7 @@
 
 .top-left,
 .bottom-left {
-  height: 200px;
+  height: 300px;
   width: 95,5%;
   border: 1px solid #ccc; /* Add borders or other styling as needed */
   padding: 15px; /* Adjust the padding as needed */
@@ -37,7 +37,7 @@ span {
 }
 
 .top-right {
-  height: 430px;
+  height: 632px;
   width: 96%;
   border: 1px solid #ccc; /* Add borders or other styling as needed */
   padding: 15px; /* Adjust the padding as needed */

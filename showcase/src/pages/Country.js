@@ -18,7 +18,6 @@ export default function Country() {
         const response = await fetch(`http://127.0.0.1:8000/nutritional-data-country/${id}`, { method: 'GET'} );
         if (response.ok) {
           const data = await response.json();
-          console.log(data)
           setCountryData(data);
         } else {
           console.error('Profile data not found');
@@ -38,7 +37,7 @@ export default function Country() {
     if (data && data.country) {
       const categories = Object.keys(data.country).slice(5);
       console.log("Categories:", categories);
-  
+
       categories.forEach(category => {
         const categoryData = data.country[category];
 
@@ -58,13 +57,163 @@ export default function Country() {
     } else {
       console.log("Invalid data structure. Missing 'country' property or data is null/undefined.");
     }
-  
-    return categorySums;
+    const csvHeaders = ["group", "production", "import_quantity", "stock_variation", "export_quantity", "feed", "seed", "losses", "food"];
+    const csvRowInput = ["input", categorySums.production, categorySums.import_quantity, categorySums.stock_variation, 0, 0, 0, 0, 0];
+    const csvRowOutput = ["output", 0, 0, 0, categorySums.export_quantity, categorySums.feed, categorySums.seed, categorySums.losses, categorySums.food];
+    const csvContent = [csvHeaders.join(",")].concat([csvRowInput.join(","), csvRowOutput.join(",")]).join("\n");
+    //return categorySums;
+    return csvContent;
   };
 
   const result = calculateCategorySums(countryData);
-
+  
   const ChartComponent = ({ data }) => {
+    const chartRef = useRef(null);
+
+    useEffect(() => {
+        if (data && Object.keys(data).length > 0) {
+            d3.select(chartRef.current).selectAll('*').remove();
+            
+            // Parsing data assuming it's in CSV-like format
+            // If data is already in the correct format, you might not need this step
+            const parsedData = d3.csvParse(data);
+
+            var subgroups = parsedData.columns.slice(1);
+            var groups = parsedData.map(row => row.group);
+            console.log("GROUPS", groups);
+            console.log("SUBGROUPS", subgroups)
+            console.log(parsedData)
+            var margin = { top: 10, right: 30, bottom: 20, left: 120 },
+                width = 750 - margin.left - margin.right,
+                height = 600 - margin.top - margin.bottom;
+
+            // Dynamically determine Y-axis domain based on the data
+            var maxY = d3.max(parsedData, d => d3.sum(subgroups, key => +d[key]));
+            var y = d3.scaleLinear().domain([0, maxY]).range([height, 0]);
+
+            var svg = d3.select(chartRef.current)
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            var x = d3.scaleBand()
+                .domain(groups)
+                .range([0, width])
+                .padding([0.2]);
+
+            svg.append("g")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x).tickSizeOuter(0));
+
+            svg.append("g")
+                .call(d3.axisLeft(y));
+            
+            svg.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 0 - margin.left)
+                .attr("x", 0 - height / 2)
+                .attr("dy", "1em")
+                .style("text-anchor", "middle")
+                .text("Weight (kg)");
+
+            var color = d3.scaleOrdinal()
+                .domain(subgroups)
+                .range(['#ff7f0e', '#2ca02c', '#377eb8', '#8c564b', '#e377c2', '#ffbb78', '#7f7f7f', '#17becf']);
+
+            var stackedData = d3.stack().keys(subgroups)(parsedData);
+
+            svg.append("g")
+                .selectAll("g")
+                .data(stackedData)
+                .enter().append("g")
+                .attr("fill", function (d) { return color(d.key); })
+                .selectAll("rect")
+                .data(function (d) { return d; })
+                .enter().append("rect")
+                .attr("x", function (d) { return x(d.data.group); })
+                .attr("y", function (d) { return y(d[1]); })
+                .attr("height", function (d) { return y(d[0]) - y(d[1]); })
+                .attr("width", x.bandwidth())
+                .on('mouseover', function (event, d) {
+                  d3.select(this)
+                      .transition()
+                      .duration(100)
+                      .attr('opacity', 0.7);
+          
+                  const columnName = d3.select(this.parentNode).datum().key; // Get the column name
+                  const value = d.data[columnName];
+          
+                  // Convert value to number if it's a string
+                  const numericValue = parseFloat(value) || 0;
+          
+                  const text = `${columnName}: ${numericValue}`;
+          
+                  const xPosition = x(d.data.group) + x.bandwidth() / 2;
+                  const yPosition = (y(d[0]) + y(d[1])) / 2;
+          
+                  svg.append('text')
+                      .attr('class', 'value-label')
+                      .attr('x', xPosition)
+                      .attr('y', yPosition)
+                      .attr('text-anchor', 'middle')
+                      .text(text);
+              })
+              .on('mouseout', function () {
+                  d3.select(this)
+                      .transition()
+                      .duration(100)
+                      .attr('opacity', 1);
+          
+                  svg.select('.value-label').remove();
+              });
+
+            const legendSet1 = svg.selectAll('.legendSet1')
+                .data(subgroups.slice(3))
+                .enter()
+                .append('g')
+                .attr('class', 'legendSet1')
+                .attr('transform', (d, i) => `translate(${width - 270},${i * 20})`);
+    
+            legendSet1.append('rect')
+                .attr('width', 15)
+                .attr('height', 15)
+                .attr('fill', d => color(d));
+      
+            legendSet1.append('text')
+                .attr('x', 20)
+                .attr('y', 9)
+                .attr('dy', '.35em')
+                .style('text-anchor', 'start')
+                .text(d => d);
+            
+            const legendSet2 = svg.selectAll('.legendSet2') // Use a different class here
+                .data(subgroups.slice(0, 3))
+                .enter()
+                .append('g')
+                .attr('class', 'legendSet2') // Use a different class here
+                .attr('transform', (d, i) => `translate(${width - 120},${i * 20})`);
+
+            legendSet2.append('rect')
+                .attr('width', 15)
+                .attr('height', 15)
+                .attr('fill', d => color(d));
+
+            legendSet2.append('text')
+                .attr('x', 20)
+                .attr('y', 9)
+                .attr('dy', '.35em')
+                .style('text-anchor', 'start')
+                .text(d => d);
+            }
+
+    }, [data]);
+
+    return <div ref={chartRef}></div>;
+};
+
+  /*const ChartComponent = ({ data }) => {
     const chartRef = useRef(null);
     useEffect(() => {
       if (data && Object.keys(data).length > 0) {
@@ -79,11 +228,11 @@ export default function Country() {
           .append('g')
           .attr('transform', `translate(${margin.right},${margin.top})`);
         const categoriesSet1 = ['production', 'import_quantity', 'stock_variation'];
+        const categoriesSet2 = ['export_quantity', 'feed', 'losses', 'seed', 'food'];
         const filteredData1 = Object.fromEntries(
           Object.entries(data)
             .filter(([key, value]) => categoriesSet1.includes(key))
         );
-        const categoriesSet2 = ['export_quantity', 'feed', 'losses', 'residuals', 'seed', 'food'];
         const filteredData2 = Object.fromEntries(
           Object.entries(data)
             .filter(([key, value]) => categoriesSet2.includes(key))
@@ -102,7 +251,7 @@ export default function Country() {
 
         const stackedDataSet1 = stackSet1(dataArray1);
         const stackedDataSet2 = stackSet2(dataArray2);
-  
+
         const xScaleSet1 = d3.scaleBand()
         .domain(['Input'])
         .range([0, width / 2])
@@ -115,8 +264,8 @@ export default function Country() {
 
         const yScale = d3.scaleLinear()
           .domain([0, Math.max(
-            d3.max(stackedDataSet2, d => d3.max(d, d => d[1])),
-            d3.max(stackedDataSet1, d => d3.max(d, d => d[1]))
+            d3.max(stackedDataSet1, d => d3.max(d, d => d[1])),
+            d3.max(stackedDataSet2, d => d3.max(d, d => d[1]))
           )])
           .range([height, 0]);
   
@@ -126,7 +275,7 @@ export default function Country() {
   
         const colorSet2 = d3.scaleOrdinal()
           .domain(categoriesSet2)
-          .range(['#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#ffbb78']);
+          .range(['#d62728', '#9467bd', '#8c564b', '#e377c2', '#ffbb78']);
   
         // Render Set 1 bars
         svg.selectAll()
@@ -200,7 +349,6 @@ export default function Country() {
               .duration(100)
               .attr('opacity', 1)
             svg.select('.value-label').remove()});
-
   
         svg.append('g')
           .attr('transform', `translate(0,${height})`)
@@ -256,7 +404,7 @@ export default function Country() {
     }, [data]);
   
     return <div ref={chartRef}></div>;
-  };
+  };*/
 
   return (
   <div className="page-container">
