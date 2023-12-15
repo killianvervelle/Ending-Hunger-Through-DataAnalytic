@@ -1,7 +1,6 @@
 // components/WorldMap.js
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Line } from 'react-chartjs-2';
 
 import * as d3 from 'd3';
 

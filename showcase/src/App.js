@@ -4,10 +4,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Home from './pages/Home';
 import PageOne from './pages/Page1';
-import Country from './pages/Country';
+
 
 import Navbar from './components/Navbar';
-
+import Country from './pages/Country';
 
 function App() {
   return (

@@ -83,7 +83,7 @@ export default function Country() {
             console.log("GROUPS", groups);
             console.log("SUBGROUPS", subgroups)
             console.log(parsedData)
-            var margin = { top: 10, right: 30, bottom: 20, left: 120 },
+            var margin = { top: 10, right: 130, bottom: 20, left: 120 },
                 width = 850 - margin.left - margin.right,
                 height = 600 - margin.top - margin.bottom;
 
