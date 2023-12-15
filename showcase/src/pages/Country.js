@@ -84,7 +84,7 @@ export default function Country() {
             console.log("SUBGROUPS", subgroups)
             console.log(parsedData)
             var margin = { top: 10, right: 30, bottom: 20, left: 120 },
-                width = 750 - margin.left - margin.right,
+                width = 850 - margin.left - margin.right,
                 height = 600 - margin.top - margin.bottom;
 
             // Dynamically determine Y-axis domain based on the data
@@ -170,11 +170,11 @@ export default function Country() {
               });
 
             const legendSet1 = svg.selectAll('.legendSet1')
-                .data(subgroups.slice(3))
+                .data(subgroups)
                 .enter()
                 .append('g')
                 .attr('class', 'legendSet1')
-                .attr('transform', (d, i) => `translate(${width - 270},${i * 20})`);
+                .attr('transform', (d, i) => `translate(${width - 20},${i * 22})`);
     
             legendSet1.append('rect')
                 .attr('width', 15)
@@ -182,26 +182,7 @@ export default function Country() {
                 .attr('fill', d => color(d));
       
             legendSet1.append('text')
-                .attr('x', 20)
-                .attr('y', 9)
-                .attr('dy', '.35em')
-                .style('text-anchor', 'start')
-                .text(d => d);
-            
-            const legendSet2 = svg.selectAll('.legendSet2') // Use a different class here
-                .data(subgroups.slice(0, 3))
-                .enter()
-                .append('g')
-                .attr('class', 'legendSet2') // Use a different class here
-                .attr('transform', (d, i) => `translate(${width - 120},${i * 20})`);
-
-            legendSet2.append('rect')
-                .attr('width', 15)
-                .attr('height', 15)
-                .attr('fill', d => color(d));
-
-            legendSet2.append('text')
-                .attr('x', 20)
+                .attr('x', 30)
                 .attr('y', 9)
                 .attr('dy', '.35em')
                 .style('text-anchor', 'start')

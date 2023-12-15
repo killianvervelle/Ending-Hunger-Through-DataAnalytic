@@ -154,9 +154,7 @@ def nutritional_data_country(country_iso:str):
             proteine_supply=filter_df(filtered_nutrional, "Protein supply quantity (g/capita/day)"),
             food_supply_kcal=filter_df(filtered_nutrional, "Food supply (kcal/capita/day)")
         )
-
         response_data = CountryDataResponse(country=country_data)
-
         return response_data
     except FileNotFoundError:
         return {"error": "CSV file not found. Please ensure the file path is correct."}
