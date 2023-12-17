@@ -167,6 +167,22 @@ def nutritional_data_country(country_iso:str):
     except FileNotFoundError:
         return {"error": "CSV file not found. Please ensure the file path is correct."}
 
+@app.get("/food-supply")
+def food_supply():
+    try:
+        plan_supply = pd.read_csv("data/cleaned/plants_2019_cleaned.csv")
+        pd.set_option('display.float_format', '{:.2f}'.format)
+        condition = (plan_supply['element'] == 'Production')
+
+        filtered_data = plan_supply.loc[condition]
+        result = filtered_data.groupby('item')['value'].sum()
+
+
+        return result
+
+        return None
+    except FileNotFoundError:
+        return {"error": "CSV file not found. Please ensure the file path is correct."}
 
 # ******************************************************************************
 #                  API Utility functions
