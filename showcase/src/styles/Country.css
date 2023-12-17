@@ -17,16 +17,18 @@
 .grid-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
   gap: 20px; /* Adjust the gap as needed */
 }
 
-.top-left,
-.bottom-left {
-  height: 300px;
-  width: 95,5%;
-  border: 1px solid #ccc; /* Add borders or other styling as needed */
+td, th {
+  padding: 1px 4px;
+}
+
+.top-left{
+  height: 632px;
+  width: 100%;
   padding: 15px; /* Adjust the padding as needed */
+  /*margin-right: 15px;*/
 }
 
 span {
@@ -38,7 +40,7 @@ span {
 
 .top-right {
   height: 632px;
-  width: 100%;
+  width: 90%;
   border: 1px solid #ccc; /* Add borders or other styling as needed */
   padding: 15px; /* Adjust the padding as needed */
   /*margin-right: 15px;*/

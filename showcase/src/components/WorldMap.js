@@ -31,7 +31,7 @@ function WorldMap() {
     const countryId = d ? d.properties.adm0_a3_us : null;
     const countryName = d ? d.properties.name : null;
 
-    if (countryId) { // TODO : THIS
+    if (countryId) {
       const countryInfo = Object.entries(data).find(([name, info]) => info.iso3 === countryId) || [countryName, { iso3: countryId, values: ['Undefined'] }];
       console.log(countryInfo)
       const [name, countryData] = countryInfo;
@@ -158,7 +158,7 @@ function WorldMap() {
     svg.call(zoom);
 
     const countryDataMap = new Map(
-      Object.entries(data).map(([countryName, countryData]) => [
+      Object.entries(data).map(([_, countryData]) => [
         countryData.iso3,
         countryData.values[0]
       ])

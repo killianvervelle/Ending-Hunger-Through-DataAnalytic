@@ -6,7 +6,7 @@ import numpy as np
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 
 # *****************************************************************************
@@ -83,10 +83,6 @@ app.add_event_handler("startup", startup_event)
 def info():
     return {'message': 'Welcome to the microservice on the global food crisis. Try out /showcase for the showcase and /docs for the doc.'}
 
-@app.post("/build")
-def none():
-    return None
-
 @app.get("/showcase")
 def showcase():
     """
@@ -105,6 +101,18 @@ async def assets(filename: str):
 # ******************************************************************************
 #                  API Endpoints
 # ******************************************************************************
+
+@app.get("/utilization-data/{country_iso}/{category}")
+def utilization_data(country_iso:str, category:str):
+    try:
+        _, country = get_iso2_and_country(ISO_ref, country_iso)
+        nutritional_data = pd.read_csv("data/cleaned/food_supply_country_cleaned.csv")
+        filtered_nutritional = nutritional_data[(nutritional_data["country"] == country) & (nutritional_data["element"] == category) & (nutritional_data["year"] == 2019)]
+        filtered_nutritional = filtered_nutritional.sort_values(by="value", ascending=False)
+        json_data = filtered_nutritional.to_json(orient='records')
+        return JSONResponse(content={'data': json_data})
+    except FileNotFoundError:
+        return {"error": "CSV file not found. Please ensure the file path is correct."}
 
 @app.get("/undernourishement-data")
 def undernourishement_data():
