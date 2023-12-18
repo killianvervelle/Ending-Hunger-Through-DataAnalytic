@@ -46,6 +46,11 @@ const Navbar = () => {
           </ul>
         </div>
       </nav>
+      <div className="black-container">
+        <p>
+          This is your context description. You can write any content here that provides additional context for your website.
+        </p>
+      </div>
     </>
   );
 }

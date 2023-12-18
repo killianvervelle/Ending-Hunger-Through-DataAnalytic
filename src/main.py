@@ -21,7 +21,7 @@ Income Inequality, Climate Change and Global Trade."""
 DATA_PATH: str = 'data/'
 URL_PREFIX: str = os.getenv("URL_PREFIX") or ""
 SERVER_ADDRESS: str = os.getenv("SERVER_ADDRESS") or ""
-ISO_ref = pd.read_excel("data\iso_list.xlsx")
+ISO_ref = pd.read_excel("data\cleaned\iso_list.xlsx")
 
 # *****************************************************************************
 #                  FastAPI entry point declaration
@@ -199,9 +199,10 @@ def filter_df(data:pd.DataFrame, element_name:str):
 
 def get_iso2_and_country(df, iso3_code):
     row = df[df['iso3'].str.strip() == iso3_code]
+    print("ROW",row)
     if not row.empty:
-        iso2 = row['iso2'].values[0].strip()
-        country = row['country'].values[0].strip()
+        iso2 = row['iso2'].values[0]
+        country = row['country'].values[0]
         return iso2, country
     else:
         return None, None

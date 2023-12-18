@@ -4,6 +4,7 @@
 }
 
 .map-container {
+  height: 800px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -29,7 +30,7 @@
 
 .zoom-buttons {
   position: absolute;
-  top: 100px;
+  top: 170px;
   left: 20px;
   display: flex;
   flex-direction: column;

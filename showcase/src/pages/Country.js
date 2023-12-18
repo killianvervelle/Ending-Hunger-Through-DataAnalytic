@@ -160,11 +160,11 @@ export default function Country() {
   const strengthSentence =
   countryName && foodToTotalRatio !== null
   ? foodToTotalRatio < 1 && malnutritionRates[countryName] < 5
-    ? `In ${countryName}, small positive adjustments to the share of food (${foodToTotalRatio.toFixed(2)*100}%) utilized to feed the population could bring the malnutrition rate (${malnutritionRates[countryName].toFixed(2)}%) down to 0. This could be achieved by lowering the share of food used to feed animals or to seed in agriculture.`
+    ? `In ${countryName}, small positive adjustments to the share of food utilized to feed the population could bring the malnutrition rate (${malnutritionRates[countryName].toFixed(2)}%) down to 0. This could be achieved by lowering the share of food used to feed animals or to seed in agriculture.`
     : foodToTotalRatio < 1 && malnutritionRates[countryName] > 5
-    ? `In ${countryName}, insufficient food (${foodToTotalRatio.toFixed(2)*100}%) is being utilized to adequately feed the population, resulting in a limited food intake per individual and malnutrition. Drastic measures need to be taken.`
+    ? `In ${countryName}, insufficient food is being utilized to adequately feed the population, resulting in a limited food intake per individual and malnutrition (${malnutritionRates[countryName].toFixed(2)}%). Drastic measures need to be taken.`
     : foodToTotalRatio > 1 && malnutritionRates[countryName] === 0.0
-    ? `In ${countryName}, enough food (${foodToTotalRatio.toFixed(2)*100}%) is being utilized to adequately feed the population. Malnutrition is close to nonexistent.`
+    ? `In ${countryName}, enough food is being utilized to adequately feed the population. Malnutrition is close to nonexistent.`
     : 'Calculating...'
   : 'Calculating...';
   

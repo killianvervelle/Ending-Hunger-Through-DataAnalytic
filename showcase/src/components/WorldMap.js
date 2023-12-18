@@ -138,7 +138,7 @@ function WorldMap() {
   const drawMap = (geojson, data) => {
     
     const width = window.innerWidth;
-    const height = 600;
+    const height = 800;
 
     const svgExists = d3.select(mapRef.current).select('svg').size() > 0;
 
