@@ -107,13 +107,10 @@ export default function Country() {
   function calculateCategorySums(data) {
     const categorySums = {};
     if (data && data.country) {
-      console.log(data)
       const categories = Object.keys(data.country).slice(4);
-      console.log(categories)
 
       categories.forEach(category => {
         const categoryData = data.country[category];
-        
 
         if (Array.isArray(categoryData)) {
           categoryData.forEach(item => {
@@ -131,7 +128,6 @@ export default function Country() {
     } else {
       console.log("Invalid data structure. Missing 'country' property or data is null/undefined.");
     }
-    console.log(categorySums)
     const csvHeaders = ["group", "Production", "Import Quantity", "Stock Variation", "Export Quantity", "Feed", "Seed", "Losses", "Food"];
     const csvRowInput = ["Available food", categorySums.production, categorySums.import_quantity, categorySums.stock_variation, 0, 0, 0, 0, 0];
     const csvRowOutput = ["Consumed food", 0, 0, 0, categorySums.export_quantity, categorySums.feed, categorySums.seed, categorySums.losses, categorySums.food];
@@ -331,7 +327,9 @@ export default function Country() {
       </div>
     <div className="grid-item right-container">
       <div className="child-container top-right">
-        <div id="table-container" style={{ maxHeight: '300px', overflowY: 'auto' }}></div>
+        <div id="table-container" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+          <div className='no-data'>Click on any data from bar on the left</div>
+        </div>
       </div>
       <div className="child-container bottom-right">
       <p><b>Analysis:</b><br/><br/>The total amount of food available = Production + Import quantity + Stock Variation.<br/>But how much of this amount is really fed to the population ?<br/>Food / Total amount of food available = <span style={ratioStyles}>
