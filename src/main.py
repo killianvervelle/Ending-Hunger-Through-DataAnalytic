@@ -133,16 +133,12 @@ def undernourishement_data():
 def nutritional_data_country(country_iso:str):
     try:
         iso2, country = get_iso2_and_country(ISO_ref, country_iso)
-
         nutritional_data = pd.read_csv("data/cleaned/food_supply_country_cleaned.csv")
         filtered_nutrional = nutritional_data[nutritional_data["country"] == country]
-
         population_data = pd.read_csv("data/cleaned/population_cleaned.csv")
         filtered_population = population_data[population_data["country"] == country]["value"].to_list()
-
         undernourished_data = pd.read_csv("data/cleaned/severely_undernourished_people_years_cleaned.csv")
         filtered_undernourished = undernourished_data[undernourished_data["country"] == country]
-
         country_data = CountryDataResponseModel(
             name=country,
             iso2=iso2,
@@ -173,14 +169,9 @@ def food_supply():
         plan_supply = pd.read_csv("data/cleaned/plants_2019_cleaned.csv")
         pd.set_option('display.float_format', '{:.2f}'.format)
         condition = (plan_supply['element'] == 'Production')
-
         filtered_data = plan_supply.loc[condition]
         result = filtered_data.groupby('item')['value'].sum()
-
-
         return result
-
-        return None
     except FileNotFoundError:
         return {"error": "CSV file not found. Please ensure the file path is correct."}
 
@@ -214,47 +205,3 @@ def get_iso2_and_country(df, iso3_code):
         return iso2, country
     else:
         return None, None
-
-'''nutritional_data[nutritional_data["country"] == country_iso]
-exported_items = ['Wheat and products', 'Fruits, other', 'Onions', 'Molluscs, Other',
-       'Groundnuts', 'Pelagic Fish', 'Bananas', 'Cephalopods',
-       'Cocoa Beans and products', 'Beans', 'Vegetables, other',
-       'Crustaceans', 'Marine Fish, Other', 'Pulses, Other and products',
-       'Sugar (Raw Equivalent)', 'Cloves', 'Maize and products',
-       'Nuts and products', 'Potatoes and products',
-       'Coffee and products', 'Demersal Fish', 'Palm Oil',
-       'Spices, Other', 'Peas', 'Pepper'] 
-
-domestic_supply_quantity = food_supply_df[(food_supply_df.item.isin(exported_items))&(food_supply_df.country.isin(countries))&(food_supply_df.year==2019)&(food_supply_df.element=="Domestic supply quantity")].reset_index(drop=True)
-other_uses = food_supply_df[(food_supply_df.item.isin(exported_items))&(food_supply_df.country.isin(countries))&(food_supply_df.year==2019)&(food_supply_df.element=="Other uses (non-food)")].reset_index(drop=True)
-
-x5 = df_plants_2014[(df_plants_2014.element=="Food")].value.sum()  
-x6 = df_plants_2019[(df_plants_2019.element=="Food")].value.sum()  
-x7 = df_plants_2014[(df_plants_2014.element=="Feed")].value.sum()  
-x8 = df_plants_2019[(df_plants_2019.element=="Feed")].value.sum()  
-x9 = df_plants_2014[(df_plants_2014.element=="Losses")].value.sum()  
-x10 = df_plants_2019[(df_plants_2019.element=="Losses")].value.sum()  
-x11 = df_plants_2014[(df_plants_2014.element=="Other uses (non-food)")].value.sum()  
-x12 = df_plants_2019[(df_plants_2019.element=="Other uses (non-food)")].value.sum()  
-ani_domesticsupply_2014 = df_animals_2014[(df_animals_2014.element=="Domestic supply quantity")]  
-ani_domesticsupply_2019 = df_animals_2019[(df_animals_2019.element=="Domestic supply quantity")] 
-food_ratio_2014 = x5 / xtot1 * 100  
-feed_ratio_2014 = x7 / xtot1 * 100  
-losses_ratio_2014 = x9 / xtot1 * 100  
-other_uses_ratio_2014 = x11 / xtot1 * 100 
-food_ratio_2019 = x6 / xtot2 * 100  
-feed_ratio_2019 = x8 / xtot2 * 100  
-losses_ratio_2019 = x10 / xtot2 * 100  
-other_uses_ratio_2019 = x12 / xtot2 * 100 
-
-items = ['Rice and products', 'Bananas', 'Sugar (Raw Equivalent)',
-       'Vegetables, other', 'Pineapples and products', 'Pelagic Fish',
-       'Wheat and products', 'Palm Oil', 'Fruits, other', 'Groundnuts',
-       'Onions', 'Coffee and products', 'Sesame seed',
-       'Maize and products', 'Bovine Meat', 'Crustaceans',
-       'Potatoes and products', 'Coconuts - Incl Copra',
-       'Nuts and products', 'Sweeteners, Other', 'Alcohol, Non-Food',
-       'Pulses, Other and products', 'Tea (including mate)',
-       'Oilcrops Oil, Other', 'Coconut Oil']
-highest_200_imports_2019 = food_supply_df[(food_supply_df.element=='Import Quantity')&(food_supply_df.year==2019)&(food_supply_df.item.isin(items))].sort_values(by='value', ascending=False).head(200).reset_index(drop=True)c
-'''
