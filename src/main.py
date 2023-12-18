@@ -49,7 +49,6 @@ class CountryDataResponseModel(BaseModel):
     iso2: str
     iso3: str
     population: list
-    population_undernourished: list
     production: list
     import_quantity: list
     stock_variation: list
@@ -144,7 +143,6 @@ def nutritional_data_country(country_iso:str):
             iso2=iso2,
             iso3=country_iso,
             population=filtered_population,
-            population_undernourished=filter_df(filtered_undernourished, "Value"),
             production=filter_df(filtered_nutrional, "Production"),
             import_quantity=filter_df(filtered_nutrional, "Import Quantity"),
             stock_variation=filter_df(filtered_nutrional, "Stock Variation"),

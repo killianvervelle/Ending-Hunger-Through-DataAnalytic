@@ -122,18 +122,7 @@ function WorldMap() {
   };
 
 
-  useEffect(() => {
-    const worldGeojson = require('../assets/worldmap.json');
   
-    if (!shouldZoom) {
-      drawMap(worldGeojson, data);
-    }
-  
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [shouldZoom, data]);
 
   const drawMap = (geojson, data) => {
     
@@ -231,6 +220,19 @@ function WorldMap() {
     drawMap(require('../assets/worldmap.json'), data);
   };
 
+  useEffect(() => {
+    const worldGeojson = require('../assets/worldmap.json');
+  
+    if (!shouldZoom) {
+      drawMap(worldGeojson, data);
+    }
+  
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [shouldZoom, data]);
+  
   const handleZoomIn = () => {
     d3.select('svg').transition().call(zoom.scaleBy, 1.5);
   };

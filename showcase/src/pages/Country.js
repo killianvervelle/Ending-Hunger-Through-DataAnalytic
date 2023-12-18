@@ -32,7 +32,7 @@ export default function Country() {
     };
 
     fetchMalnutritionData();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     const fetchCountryData = async () => {
@@ -107,10 +107,13 @@ export default function Country() {
   function calculateCategorySums(data) {
     const categorySums = {};
     if (data && data.country) {
-      const categories = Object.keys(data.country).slice(5);
+      console.log(data)
+      const categories = Object.keys(data.country).slice(4);
+      console.log(categories)
 
       categories.forEach(category => {
         const categoryData = data.country[category];
+        
 
         if (Array.isArray(categoryData)) {
           categoryData.forEach(item => {
@@ -128,6 +131,7 @@ export default function Country() {
     } else {
       console.log("Invalid data structure. Missing 'country' property or data is null/undefined.");
     }
+    console.log(categorySums)
     const csvHeaders = ["group", "Production", "Import Quantity", "Stock Variation", "Export Quantity", "Feed", "Seed", "Losses", "Food"];
     const csvRowInput = ["Available food", categorySums.production, categorySums.import_quantity, categorySums.stock_variation, 0, 0, 0, 0, 0];
     const csvRowOutput = ["Consumed food", 0, 0, 0, categorySums.export_quantity, categorySums.feed, categorySums.seed, categorySums.losses, categorySums.food];
@@ -182,8 +186,8 @@ export default function Country() {
             var subgroups = parsedData.columns.slice(1);
             var groups = parsedData.map(row => row.group);
             var margin = { top: 45, right: 130, bottom: 20, left: 120 },
-                width = 850 - margin.left - margin.right,
-                height = 600 - margin.top - margin.bottom;
+                width = 600 - margin.left - margin.right,
+                height = 650 - margin.top - margin.bottom;
 
             // Dynamically determine Y-axis domain based on the data
             var maxY = d3.max(parsedData, d => d3.sum(subgroups, key => +d[key]));
