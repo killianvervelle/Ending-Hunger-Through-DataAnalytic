@@ -158,7 +158,7 @@ function WorldMap() {
     svg.call(zoom);
 
     const countryDataMap = new Map(
-      Object.entries(data).map(([_, countryData]) => [
+      Object.entries(data).map(([countryName, countryData]) => [
         countryData.iso3,
         countryData.values[0]
       ])

@@ -8,16 +8,19 @@
   justify-content: space-between;
 }
 
-.child-container {
-  display: grid;
-  width: 100%;
-  box-sizing: border-box;
-}
+
 
 .grid-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px; /* Adjust the gap as needed */
+  display: flex;
+  justify-content: space-between;
+  height: 700px; /* Set the desired height for the grid container */
+  width: 100%;
+}
+
+.grid-item {
+  flex: 1;
+  border: 1px solid #ccc; /* Add borders or other styling as needed */
+  padding: 15px; /* Adjust the padding as needed */
 }
 
 td, th {
@@ -39,11 +42,27 @@ span {
 }
 
 .top-right {
-  height: 632px;
+  height: 332px;
   width: 90%;
   border: 1px solid #ccc; /* Add borders or other styling as needed */
   padding: 15px; /* Adjust the padding as needed */
   /*margin-right: 15px;*/
+}
+
+.bottom-right {
+  height: 332px;
+  width: 90%;
+  border: 1px solid #ffffff; /* Add borders or other styling as needed */
+  padding: 15px; /* Adjust the padding as needed */
+  /*margin-right: 15px;*/
+}
+
+.right-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  border: 1px solid #ffffff;
+  margin-left: 15px; /* Adjust the margin as needed */
 }
 
 .country-name {

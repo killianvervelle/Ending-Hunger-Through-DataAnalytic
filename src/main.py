@@ -184,6 +184,21 @@ def food_supply():
     except FileNotFoundError:
         return {"error": "CSV file not found. Please ensure the file path is correct."}
 
+@app.get("/undernourishement-data-country/{country_iso}")
+def undernourishement_data(country_iso):
+    try:
+        _, country = get_iso2_and_country(ISO_ref, country_iso)
+        undernourishement_dataframe = pd.read_csv("data/cleaned/undernourished_rate_cleaned.csv")
+        filtered_datafrane= undernourishement_dataframe[(undernourishement_dataframe["country"] == country)]
+        json_data = {}
+        for _, row in filtered_datafrane.iterrows():
+            country_name = str(row["country"])
+            values = [float(val.strip(" '")) for val in row["value"].strip("[]").split(",")]
+            json_data[country_name] = values[5]
+        return json_data
+    except FileNotFoundError:
+        return {"error": "CSV file not found. Please ensure the file path is correct."}
+
 # ******************************************************************************
 #                  API Utility functions
 # ******************************************************************************

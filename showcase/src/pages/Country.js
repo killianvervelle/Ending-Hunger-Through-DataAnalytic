@@ -11,8 +11,28 @@ export default function Country() {
 
   const [countryData, setCountryData] = useState(null);
   const [countryFoodUtilization, setUtilizationData] = useState(null);
+  const [foodToTotalRatio, setFoodToTotalRatio] = useState(null);
+  const [malnutritionRates, setMalnutritionData] = useState({"country": 0});
   const { id } = useParams();
   let hoveredInfo = null;
+  let categorysums = {}
+
+  useEffect(() => {
+    const fetchMalnutritionData = async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/undernourishement-data-country/${id}`, { method: 'GET'} );
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const data = await response.json();
+        setMalnutritionData(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchMalnutritionData();
+  }, []);
 
   useEffect(() => {
     const fetchCountryData = async () => {
@@ -112,11 +132,41 @@ export default function Country() {
     const csvRowInput = ["Available food", categorySums.production, categorySums.import_quantity, categorySums.stock_variation, 0, 0, 0, 0, 0];
     const csvRowOutput = ["Consumed food", 0, 0, 0, categorySums.export_quantity, categorySums.feed, categorySums.seed, categorySums.losses, categorySums.food];
     const csvContent = [csvHeaders.join(",")].concat([csvRowInput.join(","), csvRowOutput.join(",")]).join("\n");
-    //return categorySums;
+    categorysums = categorySums;
     return csvContent;
   };
 
   const result = calculateCategorySums(countryData);
+
+  const calculateFoodRatio = (categorysums) => {
+    if (categorysums) {
+      const ratio = categorysums.food / (categorysums.production + categorysums.import_quantity + categorysums.stock_variation);
+      setFoodToTotalRatio(ratio);
+    }
+  };
+  
+  useEffect(() => {
+    calculateFoodRatio(categorysums);
+  });
+
+  const ratioStyles = {
+    color: foodToTotalRatio !== null ? (foodToTotalRatio < 1 ? 'red' : 'green') : 'black',
+    fontSize: '16px',
+    fontWeight: 'bold'
+  };
+
+  const countryName = Object.keys(malnutritionRates);
+
+  const strengthSentence =
+  countryName && foodToTotalRatio !== null
+  ? foodToTotalRatio < 1 && malnutritionRates[countryName] < 5
+    ? `In ${countryName}, small positive adjustments to the share of food (${foodToTotalRatio.toFixed(2)*100}%) utilized to feed the population could bring the malnutrition rate (${malnutritionRates[countryName].toFixed(2)}%) down to 0. This could be achieved by lowering the share of food used to feed animals or to seed in agriculture.`
+    : foodToTotalRatio < 1 && malnutritionRates[countryName] > 5
+    ? `In ${countryName}, insufficient food (${foodToTotalRatio.toFixed(2)*100}%) is being utilized to adequately feed the population, resulting in a limited food intake per individual and malnutrition. Drastic measures need to be taken.`
+    : foodToTotalRatio > 1 && malnutritionRates[countryName] === 0.0
+    ? `In ${countryName}, enough food (${foodToTotalRatio.toFixed(2)*100}%) is being utilized to adequately feed the population. Malnutrition is close to nonexistent.`
+    : 'Calculating...'
+  : 'Calculating...';
   
   const ChartComponent = ({ data }) => {
     const chartRef = useRef(null);
@@ -201,10 +251,9 @@ export default function Country() {
                       .duration(100)
                       .attr('opacity', 0.7);
           
-                  const columnName = d3.select(this.parentNode).datum().key; // Get the column name
+                  const columnName = d3.select(this.parentNode).datum().key
                   const value = d.data[columnName];
           
-                  // Convert value to number if it's a string
                   const numericValue = parseInt(value) || 0;
           
                   const text = `${columnName}: ${numericValue}`;
@@ -276,11 +325,16 @@ export default function Country() {
           <ChartComponent data={result} />
         </div>
       </div>
-      <div className="child-container">
-        <div className="top-right">
-          <div id="table-container" style={{ maxHeight: '600px', overflowY: 'auto' }}></div>
-        </div>
+    <div className="grid-item right-container">
+      <div className="child-container top-right">
+        <div id="table-container" style={{ maxHeight: '300px', overflowY: 'auto' }}></div>
       </div>
+      <div className="child-container bottom-right">
+      <p><b>Analysis:</b><br/><br/>The total amount of food available = Production + Import quantity + Stock Variation.<br/>But how much of this amount is really fed to the population ?<br/>Food / Total amount of food available = <span style={ratioStyles}>
+          {foodToTotalRatio !== null ? foodToTotalRatio.toFixed(2)*100+"%" : 'Calculating...'}
+        </span><br/><br/>{strengthSentence}</p>
+      </div>
+    </div>
     </div>
   </div>
   );
