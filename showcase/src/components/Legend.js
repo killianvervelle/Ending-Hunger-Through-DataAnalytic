@@ -9,7 +9,7 @@ function Legend() {
     <>
     <div className="legend">
         <div className="legend-item">
-            <div className="legend-value">Malnutrition rate : </div>
+            <div className="legend-value">Malnutrition rate</div>
         </div>
         <div className="legend-item">
             <div className="legend-color" style={{ backgroundColor: '#03b082' }}></div>

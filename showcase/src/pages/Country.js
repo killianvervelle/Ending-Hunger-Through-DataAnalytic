@@ -10,7 +10,6 @@ import "../../node_modules/flag-icons/css/flag-icons.min.css";
 export default function Country() {
 
   const [countryData, setCountryData] = useState(null);
-  const [countryFoodUtilization, setUtilizationData] = useState(null);
   const [foodToTotalRatio, setFoodToTotalRatio] = useState(null);
   const [malnutritionRates, setMalnutritionData] = useState({"country": 0});
   const { id } = useParams();
@@ -66,7 +65,6 @@ export default function Country() {
       const response = await fetch(`http://127.0.0.1:8000/utilization-data/${id}/${category}`, { method: 'GET'} );
       if (response.ok) {
         const data = await response.json();
-        setUtilizationData(data);
         const parsedData = JSON.parse(data.data)
         const tableContainer = d3.select('#table-container');
         tableContainer.html('');
@@ -74,11 +72,9 @@ export default function Country() {
         tableContainer.node().appendChild(table.node());
       } else {
         console.error('Profile data not found');
-        setUtilizationData(null);
       }
     } catch (error) {
       console.error('Error fetching profile data:', error);
-      setUtilizationData(null);
     }
   };
 
@@ -117,7 +113,7 @@ export default function Country() {
         .append('tr');
 
     // Add cells with data
-    const cells = rows.selectAll('td')
+    rows.selectAll('td')
         .data(function (row) {
             return columns.map(function (column) {
                 return { column: column, value: row[column] };
@@ -370,7 +366,7 @@ export default function Country() {
               </div>
               <div className="child-container bottom-right">
                 <p>
-                  <b>Analysis:</b>
+                  <b>Analysis</b>
                   <br/><br/>
                   The total amount of food available = Production + Import quantity + Stock Variation.
                   <br/>
