@@ -77,6 +77,35 @@ span {
   width: 100%;
 }
 
+.table-title {
+  position: sticky;
+  top: 0;
+  background-color: white; /* Set the background color you prefer */
+  z-index: 1;
+  align-items: center;
+  font-weight: bold;
+  text-align: center;
+}
+
+.value-cell {
+  text-align: right;
+}
+
+/* Add a class to style the table header */
+.table-header {
+  position: sticky;
+  top: 0;
+  background-color: #f4f4f4; /* Set your preferred background color */
+  z-index: 1;
+}
+
+/* Style for the table body to enable scrolling */
+.table-body {
+  max-height: 300px; /* Set your preferred max-height */
+  overflow-y: auto;
+}
+
+
 .no-data {
   display: flex;
   justify-content: center;

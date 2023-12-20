@@ -70,7 +70,7 @@ export default function Country() {
         const parsedData = JSON.parse(data.data)
         const tableContainer = d3.select('#table-container');
         tableContainer.html('');
-        const table = tabulate(parsedData, ["element", "item", "year", "unit", "value"]);
+        const table = tabulate(parsedData, ["item", "value"]);
         tableContainer.node().appendChild(table.node());
       } else {
         console.error('Profile data not found');
@@ -83,31 +83,61 @@ export default function Country() {
   };
 
   function tabulate(data, columns) {
-    var table = d3.select('body').append('table')
-    var thead = table.append('thead')
-    var	tbody = table.append('tbody');
-  
+    var title = `${data[0].element} in ${data[0].year} in ${data[0].unit}`;
+
+    const tableContainer = d3.select('#table-container');
+    // Clear existing content in the table container
+    tableContainer.html('');
+
+    // Append the title to the table container
+    tableContainer.append('div')
+        .attr('class', 'table-title')
+        .text(title);
+
+    // Append the table to the table container
+    const table = tableContainer.append('table').attr('class', 'table-body');
+    const thead = table.append('thead').attr('class', 'table-header'); // Add 'table-header' class to the thead
+    const tbody = table.append('tbody');
+
+    // Add column headers
     thead.append('tr')
-      .selectAll('th')
-      .data(columns).enter()
-      .append('th')
-        .text(function (column) { return column; });
-  
-    var rows = tbody.selectAll('tr')
-      .data(data)
-      .enter()
-      .append('tr');
-  
-    var cells = rows.selectAll('td')
-      .data(function (row) {
-        return columns.map(function (column) {
-          return {column: column, value: row[column]};
+        .selectAll('th')
+        .data(columns).enter()
+        .append('th')
+        .text(function (column) { return column; })
+        .style('width', function (column) {
+            // Adjust the width based on the column name
+            return column === 'item' ? '400px' : '100px'; // You can set your preferred widths here
         });
-      })
-      .enter()
-      .append('td')
-      .text(function (d) { return d.value; });
-  
+
+    // Add data rows
+    const rows = tbody.selectAll('tr')
+        .data(data)
+        .enter()
+        .append('tr');
+
+    // Add cells with data
+    const cells = rows.selectAll('td')
+        .data(function (row) {
+            return columns.map(function (column) {
+                return { column: column, value: row[column] };
+            });
+        })
+        .enter()
+        .append('td')
+        .attr('class', function (d) {
+          // Add a class based on the column name for styling
+          return d.column === 'value' ? 'value-cell' : '';
+        })
+        .text(function (d) {
+            // Format the value in the 'value' column with three significant digits
+            return d.column === 'value' ? parseFloat(d.value).toFixed(3) : d.value;
+        })
+        .style('text-align', function (d) {
+            // Align the cells to the right
+            return d.column === 'value' ? 'right' : '';
+        });
+
     return table;
   }
 
