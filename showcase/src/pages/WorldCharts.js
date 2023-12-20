@@ -35,16 +35,17 @@ const WorldCharts = () => {
   return (
     <>
       <div className='world-main-container'>
-        <h1 className='world-title'>World explained in charts</h1>
+        <h1 className='world-title'>World Hunger Facts & Statistics</h1>
         <div className='world-grid-container'>
           <div className='charts'>
             <Chart data={chartData} />
           </div>
           <p>It’s estimated that the average man should be eating 2,500kcals a day, or 2,000kcals for a woman, which gives us an idea of roughly where our intake of energy needs to be</p>
-          <TopMalnutrition data={topMalnutrition} order="desc" color="red" id="1"/>
+          <div className='charts'>
+            <TopMalnutrition data={topMalnutrition} order="desc" color="red" id="1"/>
+          </div>
           <p>TODO HERE: The analysis</p>
         </div>
-        
         {/* Add more grid items as needed */}
       </div>
     </>

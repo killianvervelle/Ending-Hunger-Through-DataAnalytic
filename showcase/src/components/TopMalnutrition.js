@@ -58,7 +58,7 @@ const TopMalnutrition = ({ data, order, color, id }) => {
       .attr('text-anchor', 'middle')
       .style('font-size', '16px')
       .style('font-weight', 'bold')
-      .text('Top 30 Countries with High Malnutrition');
+      .text('Top 30 Countries with the Highest Malnutrition Rate');
 
     // X-axis Label
     svg.append('text')
@@ -103,7 +103,6 @@ const TopMalnutrition = ({ data, order, color, id }) => {
 
   return (
     <div className='top-malnutrition-chart-container'>
-      
       <svg id={'top-malnutrition-chart' + id} style={{ overflow: 'visible' }}></svg>
       <div className='slider-container'>
         <div className='slider'>

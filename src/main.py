@@ -211,7 +211,6 @@ def filter_df(data:pd.DataFrame, element_name:str):
 
 def get_iso2_and_country(df, iso3_code):
     row = df[df['iso3'].str.strip() == iso3_code]
-    print("ROW",row)
     if not row.empty:
         iso2 = row['iso2'].values[0]
         country = row['country'].values[0]

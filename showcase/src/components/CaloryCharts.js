@@ -79,7 +79,7 @@ const Chart = ({ data }) => {
       .attr('dy', '-3em')
       .attr('fill', '#000')
       .attr('text-anchor', 'middle')
-      .text('Calories per Human');
+      .text('Average daily calorie intake');
 
     // Add line to the chart
     svg.append('path')
@@ -96,7 +96,11 @@ const Chart = ({ data }) => {
       .attr('text-anchor', 'middle')
       .style('font-size', '16px')
       .style('font-weight', 'bold')
-      .text('Caloric Supply Over Years');
+      .text('Evolution of the Average Daily Calorie Intake')
+      .append('tspan')
+      .attr('x', width / 2)
+      .attr('dy', '1.2em') 
+      .text('over 5 years');
   };
 
   return <svg ref={chartRef} width={width} height={height}></svg>;
