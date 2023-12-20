@@ -4,15 +4,15 @@
 }
 
 .map-container {
-  height: 800px;
+  height: 600px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .popup {
-  width: 200px;
-  height: 235px;
+  width: 250px;
+  height: 250px;
   padding: 10px;
   position: absolute;
   top: 50px;
@@ -30,8 +30,8 @@
 
 .zoom-buttons {
   position: absolute;
-  top: 170px;
-  left: 20px;
+  top: 275px;
+  left: 35px;
   display: flex;
   flex-direction: column;
   align-items: center;

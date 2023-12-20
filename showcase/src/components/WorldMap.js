@@ -33,10 +33,26 @@ function WorldMap() {
 
     if (countryId) {
       const countryInfo = Object.entries(data).find(([name, info]) => info.iso3 === countryId) || [countryName, { iso3: countryId, values: ['Undefined'] }];
-      console.log(countryInfo)
       const [name, countryData] = countryInfo;
+
+      // Calculate the center position of the SVG
+      const svgRect = mapRef.current.getBoundingClientRect();
+      const svgCenterX = svgRect.left + svgRect.width / 2;
+      const svgCenterY = svgRect.top + svgRect.height / 2;
+
+      // Calculate the popup dimensions
+      const popupWidth = 250;
+      const popupHeight = 250;
+
+      const scrollX = window.scrollX || window.pageXOffset;
+    const scrollY = window.scrollY || window.pageYOffset;
+
+    // Calculate the position to center the popup
+    const popupX = svgCenterX - popupWidth / 2 + scrollX;
+    const popupY = svgCenterY - popupHeight / 2 + scrollY;
+
       setSelectedCountry(countryId);
-      setPopupPosition({ x: event.clientX, y: event.clientY });
+      setPopupPosition({ x: popupX, y: popupY });
       setPopupData({ country: name, iso3 : countryData.iso3 , value: countryData.values[countryData.values.length -1], values: countryData.values});
       setShouldZoom(false);
     } else {
@@ -69,8 +85,8 @@ function WorldMap() {
         d3.select(chartRef.current).selectAll('*').remove();
 
         const margin = { top: 20, right: 20, bottom: 20, left: 30 };
-        const width = 200 - margin.left - margin.right;
-        const height = 140 - margin.top - margin.bottom;
+        const width = 220 - margin.left - margin.right;
+        const height = 165 - margin.top - margin.bottom;
         const svg = d3.select(chartRef.current)
           .append('svg')
           .attr('width', width + margin.left + margin.right)
@@ -121,13 +137,10 @@ function WorldMap() {
     return <div ref={chartRef}></div>;
   };
 
-
-  
-
   const drawMap = (geojson, data) => {
     
-    const width = window.innerWidth;
-    const height = 800;
+    const width = window.innerWidth - 65;
+    const height = 600;
 
     const svgExists = d3.select(mapRef.current).select('svg').size() > 0;
 

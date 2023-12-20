@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 
 import * as d3 from 'd3';
 
@@ -16,6 +16,13 @@ export default function Country() {
   const { id } = useParams();
   let hoveredInfo = null;
   let categorysums = {}
+
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    // Scroll to top when the route changes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [pathname]);
 
   useEffect(() => {
     const fetchMalnutritionData = async () => {
