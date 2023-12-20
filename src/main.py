@@ -203,7 +203,7 @@ def compare_supply():
     try:
         food_supply_df = pd.read_csv("data/cleaned/food_supply_country_cleaned.csv")
         filtered_dataframe= food_supply_df[['element','item','year','value']]
-        filtered_dataframe = filtered_dataframe[filtered_dataframe['element'].isin(['Production', 'Domestic supply quantity', 'Seed', 'Losses'])]
+        filtered_dataframe = filtered_dataframe[filtered_dataframe['element'].isin(['Production', 'Feed', 'Seed', 'Losses'])]
         result = filtered_dataframe.groupby(['element', 'item', 'year'], as_index=False)['value'].sum()
 
         # Initialize an empty dictionary to store the custom JSON format

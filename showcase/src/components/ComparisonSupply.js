@@ -49,7 +49,7 @@ const ComparisonSupply = ({ data }) => {
         .range([height, 0]);
 
         // Define the custom order of keys
-        const keyOrder = ["Production", "Domestic supply quantity", "Losses", "Seed"];
+        const keyOrder = ["Production", "Feed", "Losses", "Seed"];
 
         // Draw grouped bars
         const barWidth = xScale.bandwidth() / keyOrder.length;
@@ -106,7 +106,7 @@ const ComparisonSupply = ({ data }) => {
 
         // Draw legend
         const legend = svg.append('g')
-        .attr('transform', `translate(${width - 150}, 0)`);
+        .attr('transform', `translate(${width - 100}, 0)`);
 
         keyOrder.forEach((key, i) => {
         legend.append('rect')
