@@ -348,33 +348,52 @@ export default function Country() {
     return <div ref={chartRef}></div>;
 };
 
+
   return (
-  <div className="page-container">
-    {countryData && (
-    <div className="country-container">
-      <span className={`fi fi-${countryData.country.iso2.toLowerCase()}`}></span>
-      <h1 className="country-name">{countryData.country.name}</h1>
-    </div>
-    )}
-    <div className="parent-container">
-      <div className="child-container">
-        <div className="top-left">
-          <ChartComponent data={result} />
+    <div className="page-container">
+      {countryData ? (
+        <div>
+          <div className="country-container">
+            <span className={`fi fi-${countryData.country.iso2.toLowerCase()}`}></span>
+            <h1 className="country-name">{countryData.country.name}</h1>
+          </div>
+          <div className="parent-container">
+            <div className="child-container">
+              <div className="top-left">
+                <ChartComponent data={result} />
+              </div>
+            </div>
+            <div className="grid-item right-container">
+              <div className="child-container top-right">
+                <div id="table-container" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                  <div className='no-data'>Click on any data from the bar on the left</div>
+                </div>
+              </div>
+              <div className="child-container bottom-right">
+                <p>
+                  <b>Analysis:</b>
+                  <br/><br/>
+                  The total amount of food available = Production + Import quantity + Stock Variation.
+                  <br/>
+                  But how much of this amount is really fed to the population ?
+                  <br/>
+                  Food / Total amount of food available = 
+                  <span style={ratioStyles}>
+                    {foodToTotalRatio !== null ? (foodToTotalRatio.toFixed(2) * 100).toFixed(3) + "%" : 'Calculating...'}
+                  </span>
+                  <br/><br/>
+                  {strengthSentence}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    <div className="grid-item right-container">
-      <div className="child-container top-right">
-        <div id="table-container" style={{ maxHeight: '300px', overflowY: 'auto' }}>
-          <div className='no-data'>Click on any data from bar on the left</div>
+      ) : (
+        <div className="loading-container">
+          <p>Loading...</p>
         </div>
-      </div>
-      <div className="child-container bottom-right">
-      <p><b>Analysis:</b><br/><br/>The total amount of food available = Production + Import quantity + Stock Variation.<br/>But how much of this amount is really fed to the population ?<br/>Food / Total amount of food available = <span style={ratioStyles}>
-          {foodToTotalRatio !== null ? (foodToTotalRatio.toFixed(2) * 100).toFixed(3)+"%" : 'Calculating...'}
-        </span><br/><br/>{strengthSentence}</p>
-      </div>
+      )}
     </div>
-    </div>
-  </div>
   );
+    
 }
