@@ -45,11 +45,11 @@ function WorldMap() {
       const popupHeight = 250;
 
       const scrollX = window.scrollX || window.pageXOffset;
-    const scrollY = window.scrollY || window.pageYOffset;
+      const scrollY = window.scrollY || window.pageYOffset;
 
-    // Calculate the position to center the popup
-    const popupX = svgCenterX - popupWidth / 2 + scrollX;
-    const popupY = svgCenterY - popupHeight / 2 + scrollY;
+      // Calculate the position to center the popup
+      const popupX = svgCenterX - popupWidth / 2 + scrollX;
+      const popupY = svgCenterY - popupHeight / 2 + scrollY;
 
       setSelectedCountry(countryId);
       setPopupPosition({ x: popupX, y: popupY });
@@ -138,7 +138,6 @@ function WorldMap() {
   };
 
   const drawMap = (geojson, data) => {
-    
     const width = window.innerWidth - 65;
     const height = 600;
 
