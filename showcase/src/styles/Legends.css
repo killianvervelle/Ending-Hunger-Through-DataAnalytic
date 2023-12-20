@@ -10,8 +10,7 @@
 }
 
 .map-container {
-  padding-left: 20px;
-  padding-right: 20px;
+
   display: flex;
   flex-direction: column;
 }
@@ -23,12 +22,12 @@
 }
 
 .legend {
-    display: flex;
-    justify-content: center;
-    padding-bottom: 10px;
-    padding-top: 28px;
-    background-color: rgb(180, 226, 255);
-  }
+  display: flex;
+  justify-content: center;
+  padding-bottom: 10px;
+  padding-top: 28px;
+  background-color: rgb(180, 226, 255);
+}
   
   .legend-item {
     display: flex;
