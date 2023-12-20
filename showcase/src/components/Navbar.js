@@ -29,13 +29,8 @@ const Navbar = () => {
               </Link>
               </li>
             <li className='nav-item'>
-              <Link to='/firstpage' className='nav-links' onClick={closeMobileMenu}>
-                Page 1
-              </Link>
-            </li>
-            <li className='nav-item'>
-              <Link to='/secondpage' className='nav-links' onClick={closeMobileMenu}>
-                Page 2
+              <Link to='/world-charts' className='nav-links' onClick={closeMobileMenu}>
+                Charts
               </Link>
             </li>
             <li className='nav-item'>

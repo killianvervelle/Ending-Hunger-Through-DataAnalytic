@@ -164,12 +164,26 @@ def nutritional_data_country(country_iso:str):
 @app.get("/food-supply")
 def food_supply():
     try:
-        plan_supply = pd.read_csv("data/cleaned/plants_2019_cleaned.csv")
+        df = pd.read_csv("data/cleaned/food_supply_kcal_cleaned.csv")
         pd.set_option('display.float_format', '{:.2f}'.format)
-        condition = (plan_supply['element'] == 'Production')
-        filtered_data = plan_supply.loc[condition]
-        result = filtered_data.groupby('item')['value'].sum()
-        return result
+
+        selected_df = df[['country', 'food_supply_kcal_2014', 'food_supply_kcal_2019']]
+        df_grouped = selected_df.groupby('country').sum().reset_index()
+
+        population_df = df[['country', 'population_2014', 'population_2019']]
+        population_df = population_df.drop_duplicates(subset='country')
+        population_df[['population_2014', 'population_2019']] *= 1000
+        total_population = population_df[['population_2014', 'population_2019']].sum().to_dict()
+        print(total_population)
+        group_kcal = df_grouped[['food_supply_kcal_2014', 'food_supply_kcal_2019']].sum().to_dict()
+        print(group_kcal)
+
+        result_dict = {
+            'kcal_per_human_2014': group_kcal['food_supply_kcal_2014'] / total_population['population_2014'] / 365,
+            'kcal_per_human_2019': group_kcal['food_supply_kcal_2019'] / total_population['population_2019'] / 365
+        }
+        print(result_dict)
+        return result_dict
     except FileNotFoundError:
         return {"error": "CSV file not found. Please ensure the file path is correct."}
 
