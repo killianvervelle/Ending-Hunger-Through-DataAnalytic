@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+
 import '../App.css';
 import '../styles/About.css'
 
 export default function About() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    // Scroll to top when the route changes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [pathname]);
 
   return (
     <>

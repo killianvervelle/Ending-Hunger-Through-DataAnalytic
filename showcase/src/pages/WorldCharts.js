@@ -1,5 +1,7 @@
 // WorldCharts.js
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+
 import Chart from '../components/CaloryCharts';
 import TopMalnutrition from '../components/TopMalnutrition';
 import ComparisonSupply from '../components/ComparisonSupply';
@@ -11,6 +13,17 @@ const WorldCharts = () => {
   const [chartData, setChartData] = useState(null);
   const [topMalnutrition, setTopMalnutrition] = useState(null);
   const [comparisonSupply, setComparisonSupply] = useState(null);
+
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    const canControlScrollRestoration = 'scrollRestoration' in window.history
+    if (canControlScrollRestoration) {
+      window.history.scrollRestoration = 'manual';
+    }
+    // Scroll to top when the route changes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [pathname]);
 
   useEffect(() => {
     fetch('http://localhost:8000/food-supply')
