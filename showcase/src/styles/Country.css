@@ -42,7 +42,6 @@ span {
 .top-right {
   height: 332px;
   width: 90%;
-  border: 1px solid #ccc; /* Add borders or other styling as needed */
   padding: 15px; /* Adjust the padding as needed */
   /*margin-right: 15px;*/
 }

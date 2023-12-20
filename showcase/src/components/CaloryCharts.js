@@ -5,7 +5,7 @@ import * as d3 from 'd3';
 const Chart = ({ data }) => {
     const chartRef = useRef(null);
     const width = 400;
-    const height = 300;
+    const height = 350;
 
     
     useEffect(() => {
@@ -18,9 +18,11 @@ const Chart = ({ data }) => {
     // Extract data
     const years = ['2014', '2019'];
     const values = [data.kcal_per_human_2014, data.kcal_per_human_2019];
+    
 
     // Set up the SVG container
     const svg = d3.select(chartRef.current);
+    svg.selectAll('*').remove(); // Clear previous chart
     
     const margin = { top: 40, right: 40, bottom: 60, left: 60 };
 
@@ -61,9 +63,10 @@ const Chart = ({ data }) => {
     // Add x-axis label
     svg.append('text')
       .attr('x', 200)
-      .attr('y', 250)
+      .attr('y', 300)
       .attr('dy', '3em')
       .attr('fill', '#000')
+      .attr('font-size', 12)
       .attr('text-anchor', 'middle')
       .text('Year');
 
@@ -92,6 +95,7 @@ const Chart = ({ data }) => {
       .attr('y', margin.top / 2)
       .attr('text-anchor', 'middle')
       .style('font-size', '16px')
+      .style('font-weight', 'bold')
       .text('Caloric Supply Over Years');
   };
 
