@@ -19,7 +19,6 @@ const TopMalnutrition = ({ data, order, color, id }) => {
       .map(([country, { values, iso3 }]) => ({ country, malnutrition: values[selectedYear - 2014], iso3 }))
       .sort((a, b) => (order === 'asc' ? a.malnutrition - b.malnutrition : b.malnutrition - a.malnutrition))
       .slice(0, 30);
-      console.log(yearData)
 
     // Create a bar chart
     const margin = { top: 50, right: 0, bottom: 10, left: 20 };
@@ -29,7 +28,7 @@ const TopMalnutrition = ({ data, order, color, id }) => {
     const x = d3.scaleBand().range([0, width]).padding(0.1);
     const y = d3.scaleLinear().range([height, 0]);
 
-    const svg = d3.select('#top-malnutrition-chart'+id);
+    const svg = d3.select('#top-malnutrition-chart' + id);
 
     svg.selectAll('*').remove(); // Clear previous chart
 

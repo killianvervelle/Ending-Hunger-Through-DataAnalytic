@@ -240,7 +240,7 @@ export default function Country() {
 
             svg.append("g")
                 .attr("transform", "translate(0," + height + ")")
-                .call(d3.axisBottom(x).tickSizeOuter(0))
+                .call(d3.axisBottom(x).tickSizeOuter(3))
                 .selectAll("text")  
                 .style("font-size", "14px"); 
 
@@ -287,20 +287,19 @@ export default function Country() {
                       .transition()
                       .duration(100)
                       .attr('opacity', 0.7);
-          
+
                   const columnName = d3.select(this.parentNode).datum().key
                   const value = d.data[columnName];
-          
-                  const numericValue = parseInt(value) || 0;
-          
+
+                  const numericValue = parseFloat(value).toFixed(2) || 0;
+
                   const text = `${columnName}: ${numericValue}`;
-          
+
                   const xPosition = x(d.data.group) + x.bandwidth() / 2;
                   const yPosition = (y(d[0]) + y(d[1])) / 2;
 
                   hoveredInfo = { columnName, numericValue, xPosition, yPosition };
 
-          
                   svg.append('text')
                       .attr('class', 'value-label')
                       .attr('x', xPosition)

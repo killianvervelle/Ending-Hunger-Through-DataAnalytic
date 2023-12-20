@@ -174,15 +174,11 @@ def food_supply():
         population_df = population_df.drop_duplicates(subset='country')
         population_df[['population_2014', 'population_2019']] *= 1000
         total_population = population_df[['population_2014', 'population_2019']].sum().to_dict()
-        print(total_population)
         group_kcal = df_grouped[['food_supply_kcal_2014', 'food_supply_kcal_2019']].sum().to_dict()
-        print(group_kcal)
-
         result_dict = {
             'kcal_per_human_2014': group_kcal['food_supply_kcal_2014'] / total_population['population_2014'] / 365,
             'kcal_per_human_2019': group_kcal['food_supply_kcal_2019'] / total_population['population_2019'] / 365
         }
-        print(result_dict)
         return result_dict
     except FileNotFoundError:
         return {"error": "CSV file not found. Please ensure the file path is correct."}
@@ -192,12 +188,47 @@ def undernourishement_data(country_iso):
     try:
         _, country = get_iso2_and_country(ISO_ref, country_iso)
         undernourishement_dataframe = pd.read_csv("data/cleaned/undernourished_rate_cleaned.csv")
-        filtered_datafrane= undernourishement_dataframe[(undernourishement_dataframe["country"] == country)]
+        filtered_dataframe= undernourishement_dataframe[(undernourishement_dataframe["country"] == country)]
         json_data = {}
-        for _, row in filtered_datafrane.iterrows():
+        for _, row in filtered_dataframe.iterrows():
             country_name = str(row["country"])
             values = [float(val.strip(" '")) for val in row["value"].strip("[]").split(",")]
             json_data[country_name] = values[5]
+        return json_data
+    except FileNotFoundError:
+        return {"error": "CSV file not found. Please ensure the file path is correct."}
+
+@app.get("/compare-supply")
+def compare_supply():
+    try:
+        food_supply_df = pd.read_csv("data/cleaned/food_supply_country_cleaned.csv")
+        filtered_dataframe= food_supply_df[['element','item','year','value']]
+        filtered_dataframe = filtered_dataframe[filtered_dataframe['element'].isin(['Production', 'Domestic supply quantity', 'Seed', 'Losses'])]
+        result = filtered_dataframe.groupby(['element', 'item', 'year'], as_index=False)['value'].sum()
+
+        # Initialize an empty dictionary to store the custom JSON format
+        json_data = {}
+
+        # Iterate through the filtered DataFrame
+        for _, row in result.iterrows():
+            item = row['item']
+            year = row['year']
+            element = row['element']
+            value = row['value']
+
+            # Check if the item is already in the dictionary
+            if item in json_data:
+                # If the item is already in the dictionary, update the existing structure
+                if f'year_{year}' in json_data[item]:
+                    json_data[item][f'year_{year}'][element] = value
+                else:
+                    json_data[item][f'year_{year}'] = {element: value}
+            else:
+                # If the item is not in the dictionary, create a new structure
+                json_data[item] = {
+                    f'year_{year}': {element: value}
+                }
+
         return json_data
     except FileNotFoundError:
         return {"error": "CSV file not found. Please ensure the file path is correct."}

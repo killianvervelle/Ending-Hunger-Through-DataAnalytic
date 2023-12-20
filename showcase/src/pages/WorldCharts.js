@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Chart from '../components/CaloryCharts';
 import TopMalnutrition from '../components/TopMalnutrition';
+import ComparisonSupply from '../components/ComparisonSupply';
 
 import '../App.css';
 import '../styles/WorldCharts.css';
@@ -9,28 +10,34 @@ import '../styles/WorldCharts.css';
 const WorldCharts = () => {
   const [chartData, setChartData] = useState(null);
   const [topMalnutrition, setTopMalnutrition] = useState(null);
+  const [comparisonSupply, setComparisonSupply] = useState(null);
 
   useEffect(() => {
-    // Fetch data from the provided API
     fetch('http://localhost:8000/food-supply')
       .then(response => response.json())
       .then(data => {
         setChartData(data);
       });
-  }, []); // Empty dependency array ensures that this effect runs only once
+  }, []);
 
   useEffect(() => {
-    // Fetch data from the provided API
+    fetch('http://localhost:8000/compare-supply')
+      .then(response => response.json())
+      .then(data => {
+        setComparisonSupply(data);
+      });
+  }, []);
+
+  useEffect(() => {
     fetch('http://localhost:8000/undernourishement-data')
       .then(response => response.json())
       .then(data => {
         const filteredData = Object.fromEntries(
           Object.entries(data).filter(([country, { values }]) => values.some(value => value !== 0))
         );
-        
         setTopMalnutrition(filteredData);
       });
-  }, []); // Empty dependency array ensures that this effect runs only once
+  }, []);
 
   return (
     <>
@@ -45,6 +52,11 @@ const WorldCharts = () => {
             <TopMalnutrition data={topMalnutrition} order="desc" color="red" id="1"/>
           </div>
           <p>TODO HERE: The analysis</p>
+          <div className='charts'>
+            <ComparisonSupply data={comparisonSupply} />
+
+          </div>
+          <p>TODO HERE : Also the analysis</p>
         </div>
         {/* Add more grid items as needed */}
       </div>
