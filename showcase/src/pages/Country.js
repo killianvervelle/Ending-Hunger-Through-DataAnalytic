@@ -370,7 +370,7 @@ export default function Country() {
       </div>
       <div className="child-container bottom-right">
       <p><b>Analysis:</b><br/><br/>The total amount of food available = Production + Import quantity + Stock Variation.<br/>But how much of this amount is really fed to the population ?<br/>Food / Total amount of food available = <span style={ratioStyles}>
-          {foodToTotalRatio !== null ? foodToTotalRatio.toFixed(2)*100+"%" : 'Calculating...'}
+          {foodToTotalRatio !== null ? (foodToTotalRatio.toFixed(2) * 100).toFixed(3)+"%" : 'Calculating...'}
         </span><br/><br/>{strengthSentence}</p>
       </div>
     </div>
