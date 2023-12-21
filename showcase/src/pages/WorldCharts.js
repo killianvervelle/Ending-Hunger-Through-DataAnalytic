@@ -98,7 +98,7 @@ const WorldCharts = () => {
           <div className='charts'>
             <PieChartComparisonSupply data={comparisonSupply} />
           </div>
-          <p>Placeholder text</p>
+          <p>We can have another visualisation of the feed-to-production ratio using pie charts.</p>
         </div>
       </div>
     </>
