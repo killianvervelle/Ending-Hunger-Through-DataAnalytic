@@ -221,7 +221,7 @@ function WorldMap() {
       const currentColor = d3.select(this).style('fill');
     
       // Lighten the color
-      const lighterColor = d3.rgb(currentColor).brighter(0.5).toString();
+      const lighterColor = d3.rgb(currentColor).brighter(0.9).toString();
     
       d3.select(this).style('fill', lighterColor);
     
@@ -321,7 +321,7 @@ function WorldMap() {
   return (
     <div className="map-container" ref={mapRef}>
       <div className="dropdown-container">
-        <label htmlFor="countryDropdown"><b>Country: </b></label>
+        <label htmlFor="countryDropdown"><b>Search: </b></label>
         <select id="countryDropdown" value={selectedDropdownCountry} onChange={handleDropdownChange}>
           <option value="">Select a country</option>
           {Object.entries(data).map(([name, info]) => (
