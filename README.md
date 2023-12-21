@@ -21,32 +21,35 @@ Finally, in order to have cleaned data and ready to be used, we have worked with
 
 ### Choice of data
 
-The data we used during this project comes from the website of the Food and Agriculture Organization on the United Nations ([FAO](https://www.fao.org/gift-individual-food-consumption/data/en)).
+The data utilized in this project has been sourced from the Food and Agriculture Organization of the United Nations (FAO). The comprehensive dataset includes diverse information, encompassing:
 
-We can find information such as :
+- Undernourishment rates for all countries over a five-year period.
+- Population figures for each country in 2014 and 2019.
+- Total food supply per country and per item, measured in 1000 tonnes, for the years 2014 and 2019.
+- The count of undernourished individuals per country in 2014 and 2019.
+- Components of the food balance for each country in 2014 and 2019, covering aspects such as production, feed, and food. 
 
-- Name of the country
-- // TODO
+Additionally, we have augmented the dataset by incorporating:
 
-With that, we also added/created more information like :
+- list of ISO2/3 indices associated with countries.
+- Total food supply per country and per item, measured in kilocalories (kcal), for the years 2014 and 2019.
+- The average calorie intake per day per person per country
 
-- ISO2/3
-- KCal
+### Purpose, Communication, Target Audience
 
+Our objective is to convey to the broader public that the worldwide food crisis stems not from inadequate productivity but rather from an imbalance in the equitable distribution of food globally. Through our application, we aim to unravel the intricate dynamics of the equation's elements (**Domestic supply quantity = Production qty + Imports + Opening stock - Exports - Closing stock - Food - Feed - Seed - Losses - Processed - Others uses - Tourist consumption - Residuals**), shedding light on the underlying factors. Our ultimate goal is to pinpoint opportunities and areas for intervention that can significantly reduce malnutrition.
 
-### Intention, message, audience
-
-We would like to demonstrate to the general public that the global food crisis is not a question about productivity but of distribution. With our application, we would be able to understand the complex interaction of the element in the equation (**Domestic supply quantity = Production qty + Imports + Opening stock - Exports - Closing stock - Food - Feed - Seed - Losses -+ Processed - Others uses - Tourist consumption - Residuals**), identify underlying causes and define opportunities/areas of intervention.
+This message is tailored for a diverse audience, including but not limited to policymakers, researchers, and individuals concerned about global food issues. By providing a nuanced understanding of the root causes and potential solutions, we strive to empower a wide range of stakeholders to contribute to a more balanced and sustainable global food system.
 
 ### Representation, Presentation and interaction
 
 #### General
 
-In the whole website, we used only one typography in order to have consistency in the text while navigating. We also used font weight (bold text) to emphasize title or important information.
+In the whole website, we used only one typography in order to have consistency in the text while navigating. We also used font weight (bold text) to emphasize titles or important information.
 
 #### World map
 
-Because we are interested in the malnutrition in the world, it is natural to work with a map of the world in order to have an overview of the malnutrition rate. We used D3.js to create the map (from a JSON file in the `/assets` folder) and draw a country by its border. Since we're interested in the country, we didn't use another library  like Leaflet because their maps also display city names, roads, etc. These are useless information, will not add anything to the analysis and therefore will overload our map. We decided to keep it simple. The user can zoom in and out using either buttons on the left or the mouse (scroll), drag the map and select a country. This is following a few recommendation from Ben Shneiderman such as overview, zoom and details-on-demand.
+Because we are interested in the malnutrition problematic across the world, it is natural to work with a map of the world in order to have an overview of the malnutrition rate. We used D3.js to create the map (from a JSON file in the `/assets` folder) and draw a country by its border. Since we're interested in the country, we didn't use another library  like Leaflet because their maps also display city names, roads, etc. These are useless information, will not add anything to the analysis and therefore will overload our map. We decided to keep it simple. The user can zoom in and out using either buttons on the left or the mouse (scroll), drag the map and select a country. This is following a few recommendation from Ben Shneiderman such as overview, zoom and details-on-demand.
 
 We may recognize some countries and know its location on the map. But sometimes, we don't. Therefore, we also added a dropdown menu containing the list of all countries sorted alphabetically. Even if we select a country on the map or on the dropdown menu, the result will still be the same, which is displaying a popup in the center of the map, showing more details about malnutrition rate over the year.
 
