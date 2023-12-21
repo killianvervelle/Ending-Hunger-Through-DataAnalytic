@@ -19,7 +19,6 @@ export default function Country() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    // Scroll to top when the route changes
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [pathname]);
 
@@ -95,7 +94,8 @@ export default function Country() {
         .append('th')
         .text(function (column) { return column; })
         .style('width', function (column) {
-            return column === 'item' ? '400px' : '100px'; 
+            return column === 'item' ? '400px' : '100px';
+         
         });
 
     const rows = tbody.selectAll('tr')
@@ -118,7 +118,7 @@ export default function Country() {
             return d.column === 'value' ? parseFloat(d.value).toFixed(3) : d.value;
         })
         .style('text-align', function (d) {
-            return d.column === 'value' ? 'right' : '';
+            return d.column === 'value' ? 'center' : '';
         });
 
     return table;
@@ -180,9 +180,9 @@ export default function Country() {
   const strengthSentence =
   countryName && foodToTotalRatio !== null
   ? foodToTotalRatio < 1 && malnutritionRates[countryName] < 5
-    ? `In ${countryName}, small positive adjustments to the share of food utilized to feed the population could bring the malnutrition rate (${malnutritionRates[countryName].toFixed(2)}%) down to 0. This could be achieved by lowering the share of food used to feed animals or to seed in agriculture.`
+    ? `In ${countryName}, small positive adjustments to the share of food utilized to feed the population could bring the malnutrition rate (${malnutritionRates[countryName].toFixed(1)}%) down to 0. This could be achieved by lowering the share of food used to feed animals or to seed in agriculture.`
     : foodToTotalRatio < 1 && malnutritionRates[countryName] > 5
-    ? `In ${countryName}, insufficient food is being utilized to adequately feed the population, resulting in a limited food intake per individual and malnutrition (${malnutritionRates[countryName].toFixed(2)}%). Drastic measures need to be taken.`
+    ? `In ${countryName}, insufficient food is being utilized to adequately feed the population, resulting in a limited food intake per individual and malnutrition (${malnutritionRates[countryName].toFixed(1)}%). Drastic measures need to be taken.`
     : foodToTotalRatio > 1 && malnutritionRates[countryName] === 0.0
     ? `In ${countryName}, enough food is being utilized to adequately feed the population. Malnutrition is close to nonexistent.`
     : 'Calculating...'
@@ -230,7 +230,7 @@ export default function Country() {
                 .attr("text-anchor", "middle")
                 .style("font-size", "18px")
                 .style("font-weight", "bold")
-                .text("Food utilization in megatonnes");
+                .text("Food Utilization in Megatonnes (2019)");
             
             svg.append("text")
                 .attr("transform", "rotate(-90)")
@@ -324,7 +324,6 @@ export default function Country() {
     return <div ref={chartRef}></div>;
 };
 
-
   return (
     <div className="page-container">
       {countryData ? (
@@ -355,7 +354,7 @@ export default function Country() {
                   <br/>
                   Food / Total amount of food available = 
                   <span style={ratioStyles}>
-                    {foodToTotalRatio !== null ? (foodToTotalRatio.toFixed(2) * 100).toFixed(3) + "%" : 'Calculating...'}
+                    {foodToTotalRatio !== null ? (foodToTotalRatio.toFixed(1) * 100).toFixed(1) + "%" : 'Calculating...'}
                   </span>
                   <br/><br/>
                   {strengthSentence}
@@ -371,5 +370,4 @@ export default function Country() {
       )}
     </div>
   );
-    
 }

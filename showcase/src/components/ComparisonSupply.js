@@ -21,7 +21,7 @@ const ComparisonSupply = ({ data }) => {
             return simplifiedData;
           });
         // Sort data by "Production" value in descending order
-        yearData.sort((a, b) => (b.values["Production"] || 0) - (a.values["Production"] || 0));
+        yearData.sort((a, b) => (b.values["Feed"] || 0) - (a.values["Feed"] || 0));
 
         // Display the top 10 items
         const top10Data = yearData.slice(0, 10);
@@ -85,7 +85,7 @@ const ComparisonSupply = ({ data }) => {
         .attr('text-anchor', 'middle')
         .style('font-size', '16px')
         .style('font-weight', 'bold')
-        .text('Top 10 Items in ' + selectedYear.slice(5));
+        .text('Top 10 Items with the Highest Feed to Production Ratio');
 
         // Draw x-axis label
         svg.append('text')

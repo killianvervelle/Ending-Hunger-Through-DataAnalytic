@@ -64,7 +64,7 @@ const TopMalnutrition = ({ data, order, color, id }) => {
       .attr('x', width / 2)
       .attr('y', height + margin.bottom / 1.5 + 120)
       .attr('text-anchor', 'middle')
-      .style('font-size', '12px')
+      .style('font-size', '14px')
       .text('Countries');
 
     // Y-axis Label
@@ -73,7 +73,7 @@ const TopMalnutrition = ({ data, order, color, id }) => {
       .attr('y', 0 - margin.left - 30)
       .attr('x', 0 - height / 2)
       .attr('dy', '1em')
-      .style('font-size', '12px')
+      .style('font-size', '14px')
       .style('text-anchor', 'middle')
       .text('Malnutrition Rate');
 

@@ -13,6 +13,11 @@
     text-align: center;
 }
 
+.justified-text {
+    text-align: justify;
+    margin-right: 60px;
+  }
+
 .world-title {
     text-align: center;
 }

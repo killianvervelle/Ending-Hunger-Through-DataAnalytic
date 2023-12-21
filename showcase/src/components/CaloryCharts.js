@@ -66,7 +66,7 @@ const Chart = ({ data }) => {
       .attr('y', 300)
       .attr('dy', '3em')
       .attr('fill', '#000')
-      .attr('font-size', 12)
+      .attr('font-size', 14)
       .attr('text-anchor', 'middle')
       .text('Year');
 
@@ -75,7 +75,7 @@ const Chart = ({ data }) => {
       .attr('transform', 'rotate(-90)')
       .attr('y', 50)
       .attr('x', -150)
-      .attr('font-size', 12)
+      .attr('font-size', 14)
       .attr('dy', '-3em')
       .attr('fill', '#000')
       .attr('text-anchor', 'middle')

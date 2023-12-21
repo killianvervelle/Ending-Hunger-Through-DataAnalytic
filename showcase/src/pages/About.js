@@ -17,7 +17,6 @@ export default function About() {
     <div className="about-container">
         <h1>About</h1>
         <p>Welcome to the About page, where we unveil the mission in the fight against hunger and malnutrition worldwide.</p>
-
         <p>Our journey begins within the realm of the Food and Agriculture Organization of the United Nations (FAO), a distinguished agency committed to fostering a world free from hunger. Our primary objective is to delve into a comprehensive study on global undernutrition.</p>
         <p>Before embarking on this crucial mission, our team diligently delves into the latest literature surrounding undernutrition, ensuring that our approach is not only informed but also aligned with the most recent advancements in the field. This initial step sets the stage for our subsequent endeavors to make a tangible impact.
         </p>
@@ -47,25 +46,8 @@ export default function About() {
         </ol>
         <p>
         Join us on this transformative journey as we strive to create a world where no one goes to bed hungry. Together, let's turn the tide against undernutrition and pave the way for a brighter, nourished future for all.
-        </p>
-
-
-        <p>Firstly, Domestic supply quantity is the sum of Production qty + Imports + Opening stock - Exports;</p>
-        <p>Secondly, "Food processing" is booked for food that can't be consummed in its original form such as oats. When processed, the quantity is consequently added to food or feed and written off the food processing stock to avoid duplicates:</p>
-
-
-----<br />
-As for the relation between all 11 elements : <br/>
-
-<p>Domestic supply quantity = Production qty + Imports + Opening stock - Exports = Closing stock + Food + Feed + Seed + Losses + Processed + Others uses + Tourist consumption + Residuals</p>
-
-<p>Domestic supply quantity = Production qty + Imports + Opening stock - Exports = Production quantity + Imports - Exports - Stock variation = Food + Feed + Seed + Losses + Processed + Others uses + Tourist consumption + Residuals</p>
-        <h2>Subtitle</h2>
-        <p>This project was made during the Master course "Visualisation de l'information"</p>
-        
-       
+        </p>       
     </div>
-      
     </>
   );
 }

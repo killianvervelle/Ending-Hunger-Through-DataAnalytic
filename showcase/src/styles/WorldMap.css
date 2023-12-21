@@ -10,6 +10,24 @@
   align-items: center;
 }
 
+.welcome {
+  width: 550px;
+  height: 550px;
+  padding: 10px;
+  position: absolute;
+  top: 120px;
+  left: 70px;
+  border: 2px solid #ccc;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+  justify-content: center;
+}
+
 .popup {
   width: 250px;
   height: 250px;

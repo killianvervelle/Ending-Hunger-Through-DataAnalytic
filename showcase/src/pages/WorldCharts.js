@@ -21,7 +21,6 @@ const WorldCharts = () => {
     if (canControlScrollRestoration) {
       window.history.scrollRestoration = 'manual';
     }
-    // Scroll to top when the route changes
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [pathname]);
 
@@ -60,18 +59,39 @@ const WorldCharts = () => {
           <div className='charts'>
             <Chart data={chartData} />
           </div>
-          <p>It’s estimated that the average man should be eating 2,500kcals a day, or 2,000kcals for a woman, which gives us an idea of roughly where our intake of energy needs to be</p>
+          <div class="justified-text">
+          <p>The average worldwide daily calorie intake of around 3000 calories suggests an overall 
+            sufficiency of food supply. However, the persistence of malnutrition worldwide highlights 
+            a critical issue in the equitable distribution of food resources. Malnutrition is a complex 
+            problem influenced by various factors such as economic disparities, regional conflicts, 
+            inadequate infrastructure, and social inequalities. Despite the global average, certain 
+            regions and communities continue to face challenges in accessing an adequate and nutritious 
+            diet. Inequitable distribution, coupled with issues like food insecurity, poverty, and lack 
+            of education, contributes to the prevalence of malnutrition. Addressing these challenges 
+            requires collaborative efforts on local, national, and international levels to implement 
+            effective policies, improve infrastructure, and promote sustainable agricultural practices.</p>
+          </div>
           <div className='charts'>
             <TopMalnutrition data={topMalnutrition} order="desc" color="red" id="1"/>
           </div>
-          <p>TODO HERE: The analysis</p>
+          <div class="justified-text">
+          <p>The observation that the 30 worst countries with high malnutrition rates tend to concentrate 
+            around the equatorial plane underscores a noteworthy geographic pattern. This concentration may 
+            be influenced by a combination of factors, including climate conditions, agricultural practices, 
+            economic challenges, and access to resources. Regions around the equator often face unique challenges 
+            related to climate variability, which can impact agricultural productivity and food security.</p>
+          </div>
           <div className='charts'>
             <ComparisonSupply data={comparisonSupply} />
-
           </div>
-          <p>TODO HERE : Also the analysis</p>
+          <div class="justified-text">
+          <p>The chart depicting food types with the highest feed-to-production ratio sheds light on a critical 
+            aspect of global food utilization. The notable disparities in feed efficiency highlight instances where 
+            certain types of food resources are diverted towards feeding animals, seeding, or losses, rather than being 
+            directly utilized for human consumption. This phenomenon underscores inefficiencies in the food supply chain 
+            and prompts a reconsideration of resource allocation.</p>
+          </div>
         </div>
-        {/* Add more grid items as needed */}
       </div>
     </>
   );

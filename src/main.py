@@ -1,12 +1,11 @@
 import os
 import logging
 import pandas as pd
-import numpy as np
 
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 # *****************************************************************************
@@ -80,7 +79,7 @@ app.add_event_handler("startup", startup_event)
 
 @app.get("/")
 def info():
-    return {'message': 'Welcome to the microservice on the global food crisis. Try out /showcase for the showcase and /docs for the doc.'}
+    return {'message': 'Welcome newcomer. Try out /showcase for the showcase and /docs for the doc.'}
 
 # ******************************************************************************
 #                  API Endpoints
@@ -151,10 +150,8 @@ def food_supply():
     try:
         df = pd.read_csv("./data/cleaned/food_supply_kcal_cleaned.csv")
         pd.set_option('display.float_format', '{:.2f}'.format)
-
         selected_df = df[['country', 'food_supply_kcal_2014', 'food_supply_kcal_2019']]
         df_grouped = selected_df.groupby('country').sum().reset_index()
-
         population_df = df[['country', 'population_2014', 'population_2019']]
         population_df = population_df.drop_duplicates(subset='country')
         population_df[['population_2014', 'population_2019']] *= 1000
@@ -190,30 +187,21 @@ def compare_supply():
         filtered_dataframe= food_supply_df[['element','item','year','value']]
         filtered_dataframe = filtered_dataframe[filtered_dataframe['element'].isin(['Production', 'Feed', 'Seed', 'Losses'])]
         result = filtered_dataframe.groupby(['element', 'item', 'year'], as_index=False)['value'].sum()
-
-        # Initialize an empty dictionary to store the custom JSON format
         json_data = {}
-
-        # Iterate through the filtered DataFrame
         for _, row in result.iterrows():
             item = row['item']
             year = row['year']
             element = row['element']
             value = row['value']
-
-            # Check if the item is already in the dictionary
             if item in json_data:
-                # If the item is already in the dictionary, update the existing structure
                 if f'year_{year}' in json_data[item]:
                     json_data[item][f'year_{year}'][element] = value
                 else:
                     json_data[item][f'year_{year}'] = {element: value}
             else:
-                # If the item is not in the dictionary, create a new structure
                 json_data[item] = {
                     f'year_{year}': {element: value}
                 }
-
         return json_data
     except FileNotFoundError:
         return {"error": "CSV file not found. Please ensure the file path is correct."}
