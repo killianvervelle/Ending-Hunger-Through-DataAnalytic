@@ -366,7 +366,7 @@ export default function Country() {
             <div className="grid-item right-container">
               <div className="child-container top-right">
                 <div id="table-container" style={{ maxHeight: '300px', overflowY: 'auto' }}>
-                  <div className='no-data'>Click on any data from the bar on the left</div>
+                  <div className='no-data'>Click on any element from the stacked bar chart</div>
                 </div>
               </div>
               <div className="child-container bottom-right">
