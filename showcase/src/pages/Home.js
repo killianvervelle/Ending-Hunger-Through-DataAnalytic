@@ -71,12 +71,12 @@ const Home = () => {
       <div className="context-container">
         <h3> Context of the study </h3>
           <p>Malnutrition remains a critical global challenge, with millions of people experiencing inadequate access to 
-          sufficient and nutritious food. The following equation, <strong>Domestic supply quantity = Production qty + 
-          Imports + Opening stock - Exports - Closing stock - Food - Feed - Seed - Losses-+ Processed - Others uses - 
+          sufficient and nutritious food. The following equation, <strong>Domestic supply quantity = Production quantity + 
+          Imports + Opening stock - Exports - Closing stock - Food - Feed - Seed - Losses -+ Processed - Others uses - 
           Tourist consumption - Residuals</strong>, highlights the complex dynamics involved in assessing the food supply chain. 
           Understanding this equation is crucial for comprehending the factors contributing to malnutrition, as it 
-          encompasses production, trade, and stock variations. Analyzing each component—such as food loss, processing, 
-          and diverse uses—provides valuable insights into the allocation of available resources and the identification 
+          encompasses production, trade, and stock variations. Analyzing each component — such as food loss, processing, 
+          and diverse uses — provides valuable insights into the allocation of available resources and the identification 
           of potential areas for intervention in addressing malnutrition on a global scale.</p>
       </div>
       <div className='main-map-container'>
