@@ -352,7 +352,7 @@ export default function Country() {
                   <br/>
                   But how much of this amount is really fed to the population ?
                   <br/>
-                  Food / Total amount of food available = 
+                  Food / Total amount of food available =&nbsp;
                   <span style={ratioStyles}>
                     {foodToTotalRatio !== null ? (foodToTotalRatio.toFixed(1) * 100).toFixed(1) + "%" : 'Calculating...'}
                   </span>

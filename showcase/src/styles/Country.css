@@ -33,7 +33,7 @@ td, th {
   height: 632px;
   width: 100%;
   padding: 15px;
-  margin-left: 105px;
+  margin-left: 75px;
 }
 
 span {
@@ -64,7 +64,7 @@ span {
   flex-direction: column;
   flex: 1;
   border: 1px solid #ffffff;
-  margin-left: 105px; 
+  margin-left: 60px; 
 }
 
 .country-name {

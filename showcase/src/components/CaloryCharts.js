@@ -73,13 +73,13 @@ const Chart = ({ data }) => {
     // Add y-axis label
     svg.append('text')
       .attr('transform', 'rotate(-90)')
-      .attr('y', 50)
+      .attr('y', 55)
       .attr('x', -150)
       .attr('font-size', 14)
       .attr('dy', '-3em')
       .attr('fill', '#000')
       .attr('text-anchor', 'middle')
-      .text('Average daily calorie intake');
+      .text('Average daily calorie intake (kcal)');
 
     // Add line to the chart
     svg.append('path')

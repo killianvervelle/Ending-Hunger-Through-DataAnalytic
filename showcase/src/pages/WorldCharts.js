@@ -61,7 +61,10 @@ const WorldCharts = () => {
           </div>
           <div class="justified-text">
           <p>The average worldwide daily calorie intake of around 3000 calories suggests an overall 
-            sufficiency of food supply. However, the persistence of malnutrition worldwide highlights 
+            sufficiency of food supply, knowing that "the recommended daily calorie intake is 2,000 calories 
+            a day for women and 2,500 for men"
+            (<a href='https://www.nhs.uk/common-health-questions/food-and-diet/what-should-my-daily-intake-of-calories-be/'>NHS</a>). 
+            However, the persistence of malnutrition worldwide highlights 
             a critical issue in the equitable distribution of food resources. Malnutrition is a complex 
             problem influenced by various factors such as economic disparities, regional conflicts, 
             inadequate infrastructure, and social inequalities. Despite the global average, certain 

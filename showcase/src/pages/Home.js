@@ -40,7 +40,11 @@ const PopupComponent = () => {
   return (
     <>
          {showPopup && (
+          
         <div className="welcome" onClick={handlePopupClose}>
+          <button className="close-button" onClick={handlePopupClose} style={{fontSize: 23}}>
+          X
+        </button>
         <p><strong>Greetings newcomer and welcome,</strong></p>
         <p>We're thrilled to have you on board. To ensure you make the most out of your experience, we'd like to guide you through the options available to you:</p>
         <p><strong>Option 1:</strong> Select a <strong>Country</strong><br/>

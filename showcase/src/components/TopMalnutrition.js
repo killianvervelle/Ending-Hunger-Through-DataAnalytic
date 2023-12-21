@@ -75,7 +75,7 @@ const TopMalnutrition = ({ data, order, color, id }) => {
       .attr('dy', '1em')
       .style('font-size', '14px')
       .style('text-anchor', 'middle')
-      .text('Malnutrition Rate');
+      .text('Malnutrition Rate (%)');
 
     svg.append('g')
       .call(d3.axisLeft(y));
