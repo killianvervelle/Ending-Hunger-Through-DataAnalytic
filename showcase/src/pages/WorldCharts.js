@@ -8,6 +8,7 @@ import ComparisonSupply from '../components/ComparisonSupply';
 
 import '../App.css';
 import '../styles/WorldCharts.css';
+import PieChartComparisonSupply from '../components/PieChartComparisonSupply';
 
 const WorldCharts = () => {
   const [chartData, setChartData] = useState(null);
@@ -59,7 +60,7 @@ const WorldCharts = () => {
           <div className='charts'>
             <Chart data={chartData} />
           </div>
-          <div class="justified-text">
+          <div className="justified-text">
           <p>The average worldwide daily calorie intake of around 3000 calories suggests an overall 
             sufficiency of food supply, knowing that "the recommended daily calorie intake is 2,000 calories 
             a day for women and 2,500 for men"
@@ -77,7 +78,7 @@ const WorldCharts = () => {
           <div className='charts'>
             <TopMalnutrition data={topMalnutrition} order="desc" color="red" id="1"/>
           </div>
-          <div class="justified-text">
+          <div className="justified-text">
           <p>The observation that the 30 worst countries with high malnutrition rates tend to concentrate 
             around the equatorial plane underscores a noteworthy geographic pattern. This concentration may 
             be influenced by a combination of factors, including climate conditions, agricultural practices, 
@@ -87,13 +88,17 @@ const WorldCharts = () => {
           <div className='charts'>
             <ComparisonSupply data={comparisonSupply} />
           </div>
-          <div class="justified-text">
+          <div className="justified-text">
           <p>The chart depicting food types with the highest feed-to-production ratio sheds light on a critical 
             aspect of global food utilization. The notable disparities in feed efficiency highlight instances where 
             certain types of food resources are diverted towards feeding animals, seeding, or losses, rather than being 
             directly utilized for human consumption. This phenomenon underscores inefficiencies in the food supply chain 
             and prompts a reconsideration of resource allocation.</p>
           </div>
+          <div className='charts'>
+            <PieChartComparisonSupply data={comparisonSupply} />
+          </div>
+          <p>Placeholder text</p>
         </div>
       </div>
     </>
