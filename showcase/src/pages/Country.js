@@ -80,39 +80,29 @@ export default function Country() {
 
   function tabulate(data, columns) {
     var title = `${data[0].element} in ${data[0].year} in ${data[0].unit}`;
-
     const tableContainer = d3.select('#table-container');
-    // Clear existing content in the table container
     tableContainer.html('');
-
-    // Append the title to the table container
     tableContainer.append('div')
         .attr('class', 'table-title')
         .text(title);
-
-    // Append the table to the table container
     const table = tableContainer.append('table').attr('class', 'table-body');
-    const thead = table.append('thead').attr('class', 'table-header'); // Add 'table-header' class to the thead
+    const thead = table.append('thead').attr('class', 'table-header'); 
     const tbody = table.append('tbody');
 
-    // Add column headers
     thead.append('tr')
         .selectAll('th')
         .data(columns).enter()
         .append('th')
         .text(function (column) { return column; })
         .style('width', function (column) {
-            // Adjust the width based on the column name
-            return column === 'item' ? '400px' : '100px'; // You can set your preferred widths here
+            return column === 'item' ? '400px' : '100px'; 
         });
 
-    // Add data rows
     const rows = tbody.selectAll('tr')
         .data(data)
         .enter()
         .append('tr');
 
-    // Add cells with data
     rows.selectAll('td')
         .data(function (row) {
             return columns.map(function (column) {
@@ -122,15 +112,12 @@ export default function Country() {
         .enter()
         .append('td')
         .attr('class', function (d) {
-          // Add a class based on the column name for styling
           return d.column === 'value' ? 'value-cell' : '';
         })
         .text(function (d) {
-            // Format the value in the 'value' column with three significant digits
             return d.column === 'value' ? parseFloat(d.value).toFixed(3) : d.value;
         })
         .style('text-align', function (d) {
-            // Align the cells to the right
             return d.column === 'value' ? 'right' : '';
         });
 
@@ -207,18 +194,12 @@ export default function Country() {
     useEffect(() => {
         if (data && Object.keys(data).length > 0) {
             d3.select(chartRef.current).selectAll('*').remove();
-            
-            // Parsing data assuming it's in CSV-like format
-            // If data is already in the correct format, you might not need this step
             const parsedData = d3.csvParse(data);
-
             var subgroups = parsedData.columns.slice(1);
             var groups = parsedData.map(row => row.group);
             var margin = { top: 45, right: 130, bottom: 20, left: 120 },
                 width = 600 - margin.left - margin.right,
                 height = 650 - margin.top - margin.bottom;
-
-            // Dynamically determine Y-axis domain based on the data
             var maxY = d3.max(parsedData, d => d3.sum(subgroups, key => +d[key]));
             var y = d3.scaleLinear().domain([0, maxY]).range([height, 0]);
 
