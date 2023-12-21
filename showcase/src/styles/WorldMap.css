@@ -116,3 +116,15 @@
 .countryLabelBg{
   fill: #30BCED;   /* country label background colour */
 }
+
+.dropdown-container {
+  padding: 8px;
+  background-color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+}
+
+.styled-dropdown:hover {
+  border-color: #007bff;
+}

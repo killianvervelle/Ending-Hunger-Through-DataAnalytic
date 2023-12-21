@@ -98,7 +98,7 @@ const PieChartComparisonSupply = ({ data }) => {
   }, [data, selectedYear]);
 
   return (
-    <div style={{ marginBottom: '20px' }}> {/* Add margin bottom here */}
+    <div>
       <h2 className='title-svg'>Top 5 Items with the Highest Feed to Production Ratio</h2>
       <div ref={chartRef} style={{ display: 'flex', flexWrap: 'wrap' }}></div>
       <div>

@@ -20,6 +20,43 @@ function WorldMap() {
   
   const zoom = d3.zoom().scaleExtent([1, 20]).on('zoom', handleZoom);
 
+  const [selectedDropdownCountry, setSelectedDropdownCountry] = useState("");
+
+
+  const handleDropdownChange = (event) => {
+    const selectedCountryName = event.target.value;
+    const selectedCountryInfo = Object.entries(data).find(([name, info]) => info.iso3 === selectedCountryName) || [selectedCountryName, { iso3: selectedCountryName, values: ['Undefined'] }];
+    const [name, countryData] = selectedCountryInfo;
+
+    // Calculate the center position of the SVG
+    const svgRect = mapRef.current.getBoundingClientRect();
+    const svgCenterX = svgRect.left + svgRect.width / 2;
+    const svgCenterY = svgRect.top + svgRect.height / 2;
+
+    // Calculate the popup dimensions
+    const popupWidth = 250;
+    const popupHeight = 250;
+
+    const scrollX = window.scrollX || window.pageXOffset;
+    const scrollY = window.scrollY || window.pageYOffset;
+
+    // Calculate the position to center the popup
+    const popupX = svgCenterX - popupWidth / 2 + scrollX;
+    const popupY = svgCenterY - popupHeight / 2 + scrollY;
+
+
+    setSelectedCountry(selectedCountryInfo[1].iso3);
+    setPopupPosition({ x: popupX, y: popupY });
+    setPopupData({ country: name, iso3: selectedCountryInfo[1].iso3, value: countryData.values[countryData.values.length - 1], values: countryData.values });
+    setShouldZoom(false);
+    setSelectedDropdownCountry(countryData.iso3);
+  };
+
+  const getCountryFeatureByName = (countryName) => {
+    const worldGeojson = require('../assets/worldmap.json');
+    return worldGeojson.features.find(feature => feature.properties.name === countryName);
+  };
+
   function handleZoom(event) {
     const { transform } = event;
     const zoomLevel = transform.k;
@@ -272,7 +309,7 @@ function WorldMap() {
     const zoomButtons = document.querySelector('.zoom-buttons');
 
     // Calculate the desired position based on the top-left corner of the map container
-    const top = mapRect.top + window.scrollY + 10; // Adjust the value as needed
+    const top = mapRect.top + window.scrollY + 60; // Adjust the value as needed
     const left = mapRect.left + window.scrollX + 10; // Adjust the value as needed
 
     // Set the position of the zoom buttons
@@ -283,6 +320,17 @@ function WorldMap() {
 
   return (
     <div className="map-container" ref={mapRef}>
+      <div className="dropdown-container">
+        <label htmlFor="countryDropdown"><b>Country: </b></label>
+        <select id="countryDropdown" value={selectedDropdownCountry} onChange={handleDropdownChange}>
+          <option value="">Select a country</option>
+          {Object.entries(data).map(([name, info]) => (
+            <option key={info.iso3} value={info.iso3}>
+              {name}
+            </option>
+          ))}
+        </select>
+      </div>
       <div className="zoom-buttons" >
         <button className="zoom-button" onClick={handleZoomIn}>+</button>
         <button className="zoom-button" onClick={handleZoomOut}>-</button>

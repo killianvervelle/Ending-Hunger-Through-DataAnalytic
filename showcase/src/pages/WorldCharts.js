@@ -16,6 +16,12 @@ const WorldCharts = () => {
   const [comparisonSupply, setComparisonSupply] = useState(null);
 
   const { pathname } = useLocation();
+  const [selectedChart, setSelectedChart] = useState('comparison');
+
+  const handleChartChange = (event) => {
+    setSelectedChart(event.target.value);
+  };
+
 
   useEffect(() => {
     const canControlScrollRestoration = 'scrollRestoration' in window.history
@@ -86,7 +92,7 @@ const WorldCharts = () => {
             related to climate variability, which can impact agricultural productivity and food security.</p>
           </div>
           <div className='charts'>
-            <ComparisonSupply data={comparisonSupply} />
+          <PieChartComparisonSupply data={comparisonSupply} />
           </div>
           <div className="justified-text">
           <p>The chart depicting food types with the highest feed-to-production ratio sheds light on a critical 
@@ -95,10 +101,7 @@ const WorldCharts = () => {
             directly utilized for human consumption. This phenomenon underscores inefficiencies in the food supply chain 
             and prompts a reconsideration of resource allocation.</p>
           </div>
-          <div className='charts'>
-            <PieChartComparisonSupply data={comparisonSupply} />
-          </div>
-          <p>We can have another visualisation of the feed-to-production ratio using pie charts.</p>
+          
         </div>
       </div>
     </>
