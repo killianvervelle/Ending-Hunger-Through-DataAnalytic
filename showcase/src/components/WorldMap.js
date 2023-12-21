@@ -229,6 +229,9 @@ function WorldMap() {
       .attr('width', newWidth)
       .attr('height', newHeight);
 
+    // Update the zoom buttons position
+    updateZoomButtonsPosition();
+
     drawMap(require('../assets/worldmap.json'), data);
   };
 
@@ -239,8 +242,14 @@ function WorldMap() {
       drawMap(worldGeojson, data);
     }
   
+    
+    handleResize();
     window.addEventListener('resize', handleResize);
+    
+    window.addEventListener('scroll', handleScroll);
     return () => {
+      
+      window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
     };
   }, [shouldZoom, data]);
@@ -252,6 +261,25 @@ function WorldMap() {
   const handleZoomOut = () => {
     d3.select('svg').transition().call(zoom.scaleBy, 0.5);
   };
+
+  const handleScroll = () => {
+    // Update the zoom buttons position on scroll
+    updateZoomButtonsPosition();
+  };
+
+  const updateZoomButtonsPosition = () => {
+    const mapRect = mapRef.current.getBoundingClientRect();
+    const zoomButtons = document.querySelector('.zoom-buttons');
+
+    // Calculate the desired position based on the top-left corner of the map container
+    const top = mapRect.top + window.scrollY + 10; // Adjust the value as needed
+    const left = mapRect.left + window.scrollX + 10; // Adjust the value as needed
+
+    // Set the position of the zoom buttons
+    zoomButtons.style.top = `${top}px`;
+    zoomButtons.style.left = `${left}px`;
+  };
+
 
   return (
     <div className="map-container" ref={mapRef}>

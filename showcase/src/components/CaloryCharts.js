@@ -9,9 +9,9 @@ const Chart = ({ data }) => {
 
     
     useEffect(() => {
-        if (data) {
-            createChart(data);
-        }
+      if (data) {
+          createChart(data);
+      }
     }, [data]);
 
   const createChart = data => {

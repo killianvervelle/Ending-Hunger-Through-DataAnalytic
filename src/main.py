@@ -21,7 +21,7 @@ Income Inequality, Climate Change and Global Trade."""
 DATA_PATH: str = 'data/'
 URL_PREFIX: str = os.getenv("URL_PREFIX") or ""
 SERVER_ADDRESS: str = os.getenv("SERVER_ADDRESS") or ""
-ISO_ref = pd.read_excel("data\cleaned\iso_list.xlsx")
+ISO_ref = pd.read_excel("./data/cleaned/iso_list.xlsx")
 
 # *****************************************************************************
 #                  FastAPI entry point declaration
@@ -82,21 +82,6 @@ app.add_event_handler("startup", startup_event)
 def info():
     return {'message': 'Welcome to the microservice on the global food crisis. Try out /showcase for the showcase and /docs for the doc.'}
 
-@app.get("/showcase")
-def showcase():
-    """
-    Showcase website demonstrating the functionalities of the microservice.
-    :return: HTML
-    """
-    logger.info("route '/showcase' called")
-
-    return FileResponse(os.path.dirname(os.getcwd())+"/showcase/index.html")
-
-@app.get("/assets/{filename}")
-async def assets(filename: str):
-    logger.info("route '/assets/{}' called".format(filename))
-    return FileResponse(os.path.dirname(os.getcwd())+ "/showcase/assets/" + filename)
-
 # ******************************************************************************
 #                  API Endpoints
 # ******************************************************************************
@@ -105,7 +90,7 @@ async def assets(filename: str):
 def utilization_data(country_iso:str, category:str):
     try:
         _, country = get_iso2_and_country(ISO_ref, country_iso)
-        nutritional_data = pd.read_csv("data/cleaned/food_supply_country_cleaned.csv")
+        nutritional_data = pd.read_csv("./data/cleaned/food_supply_country_cleaned.csv")
         filtered_nutritional = nutritional_data[(nutritional_data["country"] == country) & (nutritional_data["element"] == category) & (nutritional_data["year"] == 2019)]
         filtered_nutritional = filtered_nutritional.sort_values(by="value", ascending=False)
         json_data = filtered_nutritional.to_json(orient='records')
@@ -116,7 +101,7 @@ def utilization_data(country_iso:str, category:str):
 @app.get("/undernourishement-data")
 def undernourishement_data():
     try:
-        undernourishement_data = pd.read_csv("data/cleaned/undernourished_rate_cleaned.csv")
+        undernourishement_data = pd.read_csv("./data/cleaned/undernourished_rate_cleaned.csv")
         json_data = {}
         for _, row in undernourishement_data.iterrows():
             country_name = str(row["country"])
@@ -132,11 +117,11 @@ def undernourishement_data():
 def nutritional_data_country(country_iso:str):
     try:
         iso2, country = get_iso2_and_country(ISO_ref, country_iso)
-        nutritional_data = pd.read_csv("data/cleaned/food_supply_country_cleaned.csv")
+        nutritional_data = pd.read_csv("./data/cleaned/food_supply_country_cleaned.csv")
         filtered_nutrional = nutritional_data[nutritional_data["country"] == country]
-        population_data = pd.read_csv("data/cleaned/population_cleaned.csv")
+        population_data = pd.read_csv("./data/cleaned/population_cleaned.csv")
         filtered_population = population_data[population_data["country"] == country]["value"].to_list()
-        undernourished_data = pd.read_csv("data/cleaned/severely_undernourished_people_years_cleaned.csv")
+        undernourished_data = pd.read_csv("./data/cleaned/severely_undernourished_people_years_cleaned.csv")
         filtered_undernourished = undernourished_data[undernourished_data["country"] == country]
         country_data = CountryDataResponseModel(
             name=country,
@@ -164,7 +149,7 @@ def nutritional_data_country(country_iso:str):
 @app.get("/food-supply")
 def food_supply():
     try:
-        df = pd.read_csv("data/cleaned/food_supply_kcal_cleaned.csv")
+        df = pd.read_csv("./data/cleaned/food_supply_kcal_cleaned.csv")
         pd.set_option('display.float_format', '{:.2f}'.format)
 
         selected_df = df[['country', 'food_supply_kcal_2014', 'food_supply_kcal_2019']]
@@ -174,15 +159,11 @@ def food_supply():
         population_df = population_df.drop_duplicates(subset='country')
         population_df[['population_2014', 'population_2019']] *= 1000
         total_population = population_df[['population_2014', 'population_2019']].sum().to_dict()
-        print(total_population)
         group_kcal = df_grouped[['food_supply_kcal_2014', 'food_supply_kcal_2019']].sum().to_dict()
-        print(group_kcal)
-
         result_dict = {
             'kcal_per_human_2014': group_kcal['food_supply_kcal_2014'] / total_population['population_2014'] / 365,
             'kcal_per_human_2019': group_kcal['food_supply_kcal_2019'] / total_population['population_2019'] / 365
         }
-        print(result_dict)
         return result_dict
     except FileNotFoundError:
         return {"error": "CSV file not found. Please ensure the file path is correct."}
@@ -191,13 +172,48 @@ def food_supply():
 def undernourishement_data(country_iso):
     try:
         _, country = get_iso2_and_country(ISO_ref, country_iso)
-        undernourishement_dataframe = pd.read_csv("data/cleaned/undernourished_rate_cleaned.csv")
-        filtered_datafrane= undernourishement_dataframe[(undernourishement_dataframe["country"] == country)]
+        undernourishement_dataframe = pd.read_csv("./data/cleaned/undernourished_rate_cleaned.csv")
+        filtered_dataframe= undernourishement_dataframe[(undernourishement_dataframe["country"] == country)]
         json_data = {}
-        for _, row in filtered_datafrane.iterrows():
+        for _, row in filtered_dataframe.iterrows():
             country_name = str(row["country"])
             values = [float(val.strip(" '")) for val in row["value"].strip("[]").split(",")]
             json_data[country_name] = values[5]
+        return json_data
+    except FileNotFoundError:
+        return {"error": "CSV file not found. Please ensure the file path is correct."}
+
+@app.get("/compare-supply")
+def compare_supply():
+    try:
+        food_supply_df = pd.read_csv("./data/cleaned/food_supply_country_cleaned.csv")
+        filtered_dataframe= food_supply_df[['element','item','year','value']]
+        filtered_dataframe = filtered_dataframe[filtered_dataframe['element'].isin(['Production', 'Feed', 'Seed', 'Losses'])]
+        result = filtered_dataframe.groupby(['element', 'item', 'year'], as_index=False)['value'].sum()
+
+        # Initialize an empty dictionary to store the custom JSON format
+        json_data = {}
+
+        # Iterate through the filtered DataFrame
+        for _, row in result.iterrows():
+            item = row['item']
+            year = row['year']
+            element = row['element']
+            value = row['value']
+
+            # Check if the item is already in the dictionary
+            if item in json_data:
+                # If the item is already in the dictionary, update the existing structure
+                if f'year_{year}' in json_data[item]:
+                    json_data[item][f'year_{year}'][element] = value
+                else:
+                    json_data[item][f'year_{year}'] = {element: value}
+            else:
+                # If the item is not in the dictionary, create a new structure
+                json_data[item] = {
+                    f'year_{year}': {element: value}
+                }
+
         return json_data
     except FileNotFoundError:
         return {"error": "CSV file not found. Please ensure the file path is correct."}
