@@ -85,19 +85,33 @@ Red-weak/Protanomaly :
 
 ![Alt text](./assets/country_blindness_1.png)
 
+We also guide the user by telling him to click on any category of the stacked chart. Not only, we lighten the category on hover (and also display the name of the category and its value), but a table with details within a category will be shown on the right of the screen containing items and their respective values in a descending order.
+
+![Alt text](./assets/country_table.png)
+
+Finally, we also provide an analysis at the bottom right of the page, showing to the user the ratio of food that is fed to the population with the total amount of food available.
+
 #### World overview with charts
 
-At the right of each graph, we gave an analysis as complement in order to understand better
+Finally, we dedicated the last page of our website to world hunder facts and statistics. At the right of each graph, we gave an analysis as complement in order to have a better understanding of the chart.
 
-When it comes to showing data over time, 
+In all of our charts, we systematically start the y-axis with zero, in order to not have a biased interpretation of the data shown.
 
-We created a bar chart with the goal to show the top 30 countries
+The first graph is about displaying the evolution of the average daily calorie intake over 5 years using a line chart. Those values come from a computation where we sum the food supply kcal for year 2014 and 2019 then divided by the population, divided by 365 days.
+
+![](./assets/charts_line.png)
+
+The second graph we created is a bar chart with the goal to show the top 30 countries with the highest malnutrition rate.
 
 ![](./assets/charts_bars.png)
 
-In our "Charts" page, we let the user interact with our charts by choosing a year using a slider (with the choice of selecting one out of 6 years) or using a radio button when data of two years are available (2014 and 2019). When selecting a year, charts will update data accordingly to the chosen year.
+When it comes to showing data over time, we came with the idea to use a slider and let the user interact with our chart and choose a specific year. When selecting a year, charts will update data accordingly to the chosen year.
 
-We also guide the user
+Finally, in our last graph, we chose to show the top 5 of item with the highest feed to production ratio. We opted for a rounded-form chart over rectangular one with the goal of diversify our graphs.
+
+![](./assets/charts_pie.png)
+
+The user can also interact with the chart by clicking a radio button. We chose a radio button over a slider because we only have two years of data available (2014 and 2019) and it would be interesting to use a slider with more years.
 
 ### Critique of tool(s) used
 
