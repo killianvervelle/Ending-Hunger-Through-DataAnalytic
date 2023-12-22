@@ -45,37 +45,35 @@ This message is tailored for a diverse audience, including but not limited to po
 
 #### General
 
-In the whole website, we used only one typography in order to have consistency in the text while navigating. We also used font weight (bold text) to emphasize titles or important information.
+Throughout the entire website, we have maintained a consistent typographical style to ensure textual coherence during navigation. Additionally, font weight, particularly bold text, has been strategically employed to emphasize titles and convey crucial information.
 
 #### World map
 
-Because we are interested in the malnutrition problematic across the world, it is natural to work with a map of the world in order to have an overview of the malnutrition rate. We used D3.js to create the map (from a JSON file in the `/assets` folder) and draw a country by its border. Since we're interested in the country, we didn't use another library  like Leaflet because their maps also display city names, roads, etc. These are useless information, will not add anything to the analysis and therefore will overload our map. We decided to keep it simple. The user can zoom in and out using either buttons on the left or the mouse (scroll), drag the map and select a country. This is following a few recommendation from Ben Shneiderman such as overview, zoom and details-on-demand.
+Given our focus on addressing global malnutrition issues, the utilization of a world map is pivotal for providing an overview of malnutrition rates worldwide. To achieve this, we employed D3.js to generate the map using data from a JSON file located in the /assets folder, outlining each country's borders. Our choice to use D3.js stems from a deliberate decision to avoid libraries like Leaflet, which include extraneous details such as city names and roads, ultimately overloading our map with unnecessary information. Our commitment to simplicity enables users to zoom in/out using buttons or mouse scroll, drag the map, and select a country—a design inspired by Ben Shneiderman's principles of overview, zoom, and details-on-demand.
 
-We may recognize some countries and know its location on the map. But sometimes, we don't. Therefore, we also added a dropdown menu containing the list of all countries sorted alphabetically. Even if we select a country on the map or on the dropdown menu, the result will still be the same, which is displaying a popup in the center of the map, showing more details about malnutrition rate over the year.
+While users may recognize some countries, others may be unfamiliar. To address this, we incorporated a dropdown menu alphabetically listing all countries. Whether a user selects a country on the map or through the dropdown menu, the result remains consistent—a popup at the map's center displaying detailed malnutrition rate information over the years.
 
 ![](./assets/home_select.png)
 
-As for the interaction, when the user is hovering a country, we made the color a bit lighter to show the selected country under the mouse. We also displayed the name of the country in the center of the latter.
+In terms of user interaction, hovering over a country lightens its color, visually indicating the selected country under the mouse. Simultaneously, the country's name is displayed at the center.
 
 ![Alt text](./assets/home_hover.png)
 
-The user can then click on the country and a popup will be displayed with a line chart of the malnutrition rate over a period of 6 years. If the user is interested by knowing more information about the selected country, he can click on the "More" button (also with a hover effect, darken the color) and he will be brought to another page
+Clicking on a country reveals a popup with a line chart depicting malnutrition rates over a 6-year period. For users desiring more detailed information, clicking the "More" button (with a hover effect darkening the color) redirects them to another page.
 
 ![](./assets/home_popup.png)
 
-Regarding the color used, we made sure to use few colors and also meaningful ones. For instance, in our map, we used 3 colors (green, orange and red) that are meaningful in our culture. Indeed, green  represents something positive and signifies areas with favorable nutritional conditions, while orange serves as a cautionary color, indicating regions with moderate levels of malnutrition. Red is reserved for areas with a high malnutrition rate, emphasizing critical zones that demand urgent attention.
+Careful consideration was given to the color scheme, utilizing a limited but meaningful palette. Three colors—green, orange, and red—were chosen, each conveying significance within our cultural context. Green symbolizes positivity, representing areas with favorable nutritional conditions; orange serves as a cautionary hue for regions with moderate malnutrition levels, while red is reserved for areas requiring urgent attention due to high malnutrition rates.
 
 #### Details about a country
 
-For the page of details about a country, we chose to represent our data using a grouped bar chart.
+For the country-specific details page, we've employed a grouped bar chart to present our data effectively.
 
 ![Alt text](./assets/country_stacked_bar.png)
 
-We have paid particular attention to the notion of data ink ratio. Before, in the y-axis, the unit used was the kilogram, leading to values in the scaling with lots of zero (in other words, values in millions). We used to have borders to delimit all grids in the page. Finally, the legend displayed all values below each other, even though, we have two bars with different categories.
+A significant improvement is the careful consideration of the data ink ratio. We refined the y-axis unit to megatonnes, eliminating excessive zeros in the scaling. Borders were removed, providing a cleaner aesthetic. To enhance clarity, we introduced spacing between categories, guiding users to associate top legend categories with the left bar and bottom legend categories with the right bar.
 
-The changes we made was to remove all borders, change the unit to megatonnes and we put spaces between [Production, Import Quantity, Stock Variation] and [Export Quantity, Feed, Seed, Losses and Food] with the goal to show to the user that categories in the top of the legend is for the left bar and categories in the bottom is for the right one.
-
-We've also thought about color-blind people by using an appropriate color palette and checked with the website [Colblindor](https://www.color-blindness.com/coblis-color-blindness-simulator/)
+To cater to color-blind individuals, we meticulously selected a color palette, verified using the Colblindor website. [Colblindor](https://www.color-blindness.com/coblis-color-blindness-simulator/)
 
 Normal view :
 
@@ -85,23 +83,21 @@ Red-weak/Protanomaly :
 
 ![Alt text](./assets/country_blindness_1.png)
 
-We also guide the user by telling him to click on any category of the stacked chart. Not only, we lighten the category on hover (and also display the name of the category and its value), but a table with details within a category will be shown on the right of the screen containing items and their respective values in a descending order.
+User guidance is integrated, prompting them to click on any category in the stacked chart. Hover effects highlight the selected category, displaying its name and value. A detailed table appears on the right, providing itemized information within the chosen category.
 
 ![Alt text](./assets/country_table.png)
 
-Finally, we also provide an analysis at the bottom right of the page, showing to the user the ratio of food that is fed to the population with the total amount of food available.
+An additional analysis in the bottom-right corner illustrates the ratio of food fed to the population compared to the total available food.
 
 #### World overview with charts
 
-Finally, we dedicated the last page of our website to world hunder facts and statistics. At the right of each graph, we gave an analysis as complement in order to have a better understanding of the chart.
+The final page of our website is dedicated to global hunger facts and statistics. Each chart is accompanied by complementary analysis on the right, enriching the user's understanding.
 
-In all of our charts, we systematically start the y-axis with zero, in order to not have a biased interpretation of the data shown.
-
-The first graph is about displaying the evolution of the average daily calorie intake over 5 years using a line chart. Those values come from a computation where we sum the food supply kcal for year 2014 and 2019 then divided by the population, divided by 365 days.
+In all charts, we ensure a non-biased interpretation by starting the y-axis with zero. The first graph depicts the evolution of average daily calorie intake over five years, presented through a line chart. Calculated values consider the sum of food supply kcal for 2014 and 2019, divided by the population, and further divided by 365 days.
 
 ![](./assets/charts_line.png)
 
-The second graph we created is a bar chart with the goal to show the top 30 countries with the highest malnutrition rate.
+The second graph identifies the top 30 countries with the highest malnutrition rates, illustrated in a bar chart.
 
 ![](./assets/charts_bars.png)
 
