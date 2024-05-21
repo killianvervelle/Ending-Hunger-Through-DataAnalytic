@@ -1,21 +1,14 @@
 # VI_Project
 
-- Membres: Maillefer Dalia, Vervelle Killian
-- Public cible: Grand public
-- Intention/objectif: Démontrer que la crise mondiale alimentaire n'est pas une question de productivité mais bien de répartition
-- Source(s) de données: https://www.fao.org/gift-individual-food-consumption/data/en
-- Descriptif du projet: Visualisation des données au moyen d'une page HTML
-- Lien du projet: https://github.com/AliceThunderWind/VI_Project
-- Date de présentation souhaitée: TBD
+- Team Members: Maillefer Dalia, Vervelle Killian
+- Target Audience: General Public
+- Intent/Objectives: This project aims to provide insights and analysis to support the argument that improving food distribution can address the global food crisis more effectively than merely increasing food production.
+- Data Source: https://www.fao.org/gift-individual-food-consumption/data/en
 
 
 ## Architecture, Frameworks and Technologies
 
-This project contains a backend and a frontend, in other words our website. For our backend, we used FastAPI as framework and its goal is to get all data from CSVs and send them to the frontend in a JSON format.
-
-As for the frontend, we created from scratch a website using the framework React and JavaScript as language. With this, we were able to use the library D3.js, well-known for creating charts and visualization.
-
-Finally, in order to have cleaned data and ready to be used, we have worked with Python Notebook.
+This project comprises a backend and a frontend, constituting our website. In the backend, FastAPI serves as the framework, tasked with retrieving data from CSV files and transmitting it to the frontend in JSON format. On the frontend side, we've developed a website using React and JavaScript. Leveraging the D3.js library, we've enhanced the user experience with dynamic data displays. Additionally, data preparation and cleaning were facilitated using Python Notebook, ensuring that our data is ready for consumption.
 
 ## Documentation
 
